@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>HK Quant Master V4.1 - 技財雙重掃描器</title>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; }
+        .bull-text { color: #10b981; }
+        .bear-text { color: #ef4444; }
+        .info-badge { font-size: 0.70rem; padding: 4px 6px; border-radius: 6px; background: rgba(30, 41, 59, 0.8); border: 1px solid #475569; text-align: center; }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="card p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg border-b-4 border-blue-500">
+            <div>
+                <h1 class="text-3xl font-black text-white mb-2">HK Quant Master V4.1 <span class="text-blue-500">技財雙重掃描器</span></h1>
+                <p class="text-slate-400 text-sm">技術面發掘買點，基本面鎖定底氣 | 最後更新：2026-03-27 00:57</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-right bg-slate-900 p-4 rounded-lg border border-slate-700">
+                <p class="text-xs text-slate-400 mb-1">自動判斷當前大盤狀態</p>
+                <div class="text-xl font-bold bear-text">🔴 熊市/震盪狀態 (基準 < 200MA)</div>
+                <div class="text-sm mt-2 text-slate-300">目前啟動引擎：<span class="font-bold text-yellow-400">Mean Reversion (RSI超賣抄底)</span></div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+            <div class="lg:w-2/5 flex flex-col gap-4 overflow-y-auto max-h-[850px] pr-2">
+                <h2 class="text-xl font-bold border-b border-slate-700 pb-2 sticky top-0 bg-[#0f172a] z-10 pt-2">🎯 今日觸發標的 (16)</h2>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('0135.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">0135.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-slate-400 mb-3 border-b border-slate-700 pb-2">
+                        ⚡ 連續觸發 2 天 | RSI: 21.9
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">4.67%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-red-400 font-bold text-sm">衰退中 (-17.7%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-15.7%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">171.3M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$7.44</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$6.55</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$8.93</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('0604.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">0604.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-slate-400 mb-3 border-b border-slate-700 pb-2">
+                        ⚡ 連續觸發 2 天 | RSI: 15.8
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">0%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+175.5%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-46.2%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">7.2M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$0.7</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$0.62</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$0.84</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('0861.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">0861.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-slate-400 mb-3 border-b border-slate-700 pb-2">
+                        ⚡ 連續觸發 2 天 | RSI: 27.9
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">3.33%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+39.8%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-46.8%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">7.5M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$2.1</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$1.85</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$2.52</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('0981.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">0981.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 29.1
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">0%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+99.4%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-43.2%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">3266.0M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$53.15</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$46.77</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$63.78</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('1024.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">1024.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 13.9
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">1.51%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+30.9%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-50.8%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">2025.7M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$45.6</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$40.13</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$54.72</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('1109.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">1109.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 23.9
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">5.15%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+16.2%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-17.5%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">466.1M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$27.96</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$24.6</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$33.55</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('1336.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">1336.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 29.4
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-green-400 font-black text-sm">6.23%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+88.0%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-28.9%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">439.5M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$46.78</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$41.17</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$56.14</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('1516.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">1516.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 18.9
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-green-400 font-black text-sm">13.45%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">溫和復甦 (+1.8%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-60.4%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">18.7M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$0.88</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$0.77</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$1.06</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('2013.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">2013.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 29.6
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">0%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+73.0%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-50.7%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">107.9M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$1.48</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$1.3</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$1.78</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('3311.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">3311.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 26.6
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-green-400 font-black text-sm">6.72%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">溫和復甦 (+2.1%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-30.1%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">55.8M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$8.48</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$7.46</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$10.18</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('3319.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">3319.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 26.8
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-green-400 font-black text-sm">7.07%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-red-400 font-bold text-sm">衰退中 (-8.3%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-49.8%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">5.2M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$1.92</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$1.69</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$2.3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('3958.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">3958.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 27.3
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">4.43%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+46.5%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-37.9%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">48.0M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$5.42</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$4.77</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$6.5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('6690.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">6690.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 24.3
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">5.9%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">溫和復甦 (+13.6%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-19.1%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">340.6M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$22.82</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$20.08</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$27.38</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('6862.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">6862.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 26.5
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">5.19%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-red-400 font-bold text-sm">衰退中 (-13.6%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-22.1%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">331.8M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$13.91</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$12.24</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$16.69</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('9992.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">9992.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 26.7
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">1.8%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-green-400 font-bold text-sm">強勁成長 (+271.2%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-red-400 font-bold text-sm">-55.7%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">3347.0M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$150.7</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$132.62</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$180.84</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('9999.HK')">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-2xl font-black text-white">9999.HK</div>
+                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
+                    </div>
+                    
+                    <div class="text-xs font-bold text-yellow-400 mb-3 border-b border-slate-700 pb-2">
+                        🔥 最新訊號 (第1天) | RSI: 28.0
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">股息殖利率</span>
+                            <span class="text-slate-300 text-sm">2.71%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">近期業績動能</span>
+                            <span class="text-red-400 font-bold text-sm">衰退中 (-29.4%)</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">52週回撤</span>
+                            <span class="text-slate-300 font-bold text-sm">-30.6%</span>
+                        </div>
+                        <div class="info-badge">
+                            <span class="text-slate-400 block mb-1">日成交額</span>
+                            <span class="text-slate-300 font-bold text-sm">1244.6M</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
+                        <div>
+                            <div class="text-[10px] text-slate-500">現價進場</div>
+                            <div class="font-bold text-white">$171.8</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-red-400">嚴格止損</div>
+                            <div class="font-bold text-red-400">$151.18</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-green-400">目標止盈</div>
+                            <div class="font-bold text-green-400">$206.16</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:w-3/5 flex flex-col">
+                <div class="card p-4 mb-4 flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900">
+                    <h3 id="chart_title" class="text-xl font-bold text-white">點擊左側股票載入圖表</h3>
+                    <a id="tv_link" href="#" target="_blank" class="hidden bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 px-4 rounded transition shadow">
+                        📊 在 TradingView 開啟完整圖表
+                    </a>
+                </div>
+
+                <div class="card p-4 h-[400px] flex items-center justify-center relative shadow-inner">
+                    <p id="chart_placeholder" class="text-slate-500 absolute z-0">圖表顯示區 (近100日走勢)</p>
+                    <canvas id="myChart" class="w-full h-full relative z-10 hidden"></canvas>
+                </div>
+
+                <div class="mt-4 card p-5 text-sm bg-slate-800">
+                    <h3 class="font-bold text-blue-400 mb-3 border-b border-slate-700 pb-2 text-lg">💎 基本面長抱護城河評估 (The Moat Checklist)</h3>
+                    <div class="space-y-3">
+                        <p class="text-slate-300">
+                            <span class="bg-green-900 text-green-400 px-2 py-1 rounded text-xs mr-2 font-bold">高股息防護</span>
+                            港股跌穿布林下軌時，若該股<b>殖利率 > 6%</b>（綠色高亮），代表即使套牢，每年豐厚的配息也能為您提供強大的下行保護墊，這類股票非常適合長線逢低佈局。
+                        </p>
+                        <p class="text-slate-300">
+                            <span class="bg-blue-900 text-blue-400 px-2 py-1 rounded text-xs mr-2 font-bold">業績動能確認</span>
+                            當股票暴跌但財報顯示<b>「強勁成長 (+)」</b>或<b>「溫和復甦」</b>時，這就是典型的「被宏觀情緒錯殺」的黃金坑。若業績標示為<b>「衰退中 (-)」</b>，代表下跌是有基本面原因的，抄底請嚴格執行 12% 止損，絕不能長抱！
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const signalsData = [{"ticker": "0135.HK", "tv_ticker": "HKEX:135", "price": 7.44, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 2, "sl": 6.55, "tp": 8.93, "rsi": 21.9, "dd_52w": -15.7, "turnover_m": 171.3, "div_yield": 4.67, "earn_label": "\u8870\u9000\u4e2d (-17.7%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [7.21, 7.14, 7.21, 7.28, 7.32, 7.3, 7.37, 7.47, 7.52, 7.41, 7.33, 7.28, 7.29, 7.21, 7.21, 7.28, 7.26, 7.32, 7.37, 7.43, 7.39, 7.43, 7.35, 7.52, 7.51, 7.45, 7.4, 7.4, 7.22, 7.3, 7.33, 7.41, 7.5, 7.4, 7.41, 7.5, 7.41, 7.4, 7.43, 7.43, 7.35, 7.37, 7.38, 7.4, 7.47, 7.6, 7.36, 7.28, 7.34, 7.38, 7.44, 7.35, 7.4, 7.43, 7.6, 7.87, 7.91, 7.99, 7.8, 7.9, 7.95, 8.02, 8.03, 8.0, 7.91, 7.99, 8.11, 8.17, 8.16, 8.12, 8.11, 8.18, 8.25, 8.14, 8.19, 8.26, 8.3, 8.35, 8.25, 8.37, 8.39, 8.36, 8.5, 8.55, 8.56, 8.67, 8.33, 8.25, 8.38, 8.58, 8.48, 8.42, 8.36, 8.41, 8.44, 8.51, 8.38, 8.3, 7.6, 7.44], "chart_sma20": [7.11, 7.12, 7.14, 7.16, 7.18, 7.2, 7.22, 7.24, 7.26, 7.27, 7.28, 7.28, 7.29, 7.29, 7.29, 7.29, 7.29, 7.29, 7.3, 7.31, 7.32, 7.33, 7.34, 7.35, 7.36, 7.37, 7.37, 7.37, 7.35, 7.35, 7.35, 7.35, 7.36, 7.37, 7.38, 7.39, 7.4, 7.41, 7.41, 7.41, 7.41, 7.4, 7.41, 7.4, 7.4, 7.41, 7.4, 7.4, 7.4, 7.41, 7.41, 7.41, 7.4, 7.41, 7.42, 7.43, 7.46, 7.49, 7.51, 7.53, 7.56, 7.59, 7.63, 7.66, 7.68, 7.7, 7.73, 7.78, 7.82, 7.86, 7.89, 7.93, 7.97, 8.01, 8.04, 8.06, 8.08, 8.1, 8.12, 8.14, 8.17, 8.18, 8.21, 8.23, 8.27, 8.3, 8.31, 8.31, 8.33, 8.35, 8.37, 8.38, 8.38, 8.4, 8.41, 8.42, 8.43, 8.42, 8.39, 8.35], "chart_lbb": [6.83, 6.84, 6.87, 6.91, 6.96, 7.03, 7.06, 7.06, 7.05, 7.06, 7.08, 7.08, 7.11, 7.1, 7.1, 7.1, 7.1, 7.11, 7.12, 7.12, 7.13, 7.16, 7.18, 7.17, 7.17, 7.18, 7.18, 7.18, 7.17, 7.16, 7.16, 7.17, 7.17, 7.19, 7.22, 7.23, 7.25, 7.26, 7.26, 7.26, 7.26, 7.26, 7.26, 7.26, 7.27, 7.25, 7.24, 7.23, 7.25, 7.27, 7.28, 7.27, 7.27, 7.27, 7.26, 7.18, 7.13, 7.08, 7.08, 7.07, 7.07, 7.07, 7.08, 7.1, 7.12, 7.12, 7.15, 7.21, 7.26, 7.33, 7.39, 7.48, 7.58, 7.7, 7.79, 7.8, 7.81, 7.81, 7.86, 7.88, 7.9, 7.91, 7.91, 7.92, 7.95, 7.97, 7.99, 8.0, 8.02, 8.04, 8.07, 8.1, 8.11, 8.15, 8.18, 8.2, 8.21, 8.2, 7.97, 7.74]}, {"ticker": "0604.HK", "tv_ticker": "HKEX:604", "price": 0.7, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 2, "sl": 0.62, "tp": 0.84, "rsi": 15.8, "dd_52w": -46.2, "turnover_m": 7.2, "div_yield": 0, "earn_label": "\u5f37\u52c1\u6210\u9577 (+175.5%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [0.86, 0.84, 0.86, 0.87, 0.88, 0.89, 0.88, 0.89, 0.91, 0.93, 0.95, 0.98, 0.96, 0.94, 0.92, 0.93, 0.91, 0.91, 0.9, 0.9, 0.89, 0.89, 0.9, 0.91, 0.88, 0.89, 0.88, 0.87, 0.86, 0.86, 0.86, 0.86, 0.85, 0.83, 0.83, 0.82, 0.82, 0.83, 0.83, 0.83, 0.8, 0.8, 0.8, 0.81, 0.83, 0.85, 0.84, 0.84, 0.84, 0.85, 0.85, 0.85, 0.86, 0.84, 0.84, 0.84, 0.83, 0.83, 0.83, 0.84, 0.84, 0.86, 0.9, 0.87, 0.85, 0.86, 0.88, 0.87, 0.87, 0.87, 0.88, 0.88, 0.88, 0.87, 0.87, 0.87, 0.88, 0.86, 0.87, 0.85, 0.84, 0.83, 0.82, 0.81, 0.82, 0.83, 0.82, 0.83, 0.82, 0.82, 0.83, 0.82, 0.82, 0.82, 0.8, 0.78, 0.74, 0.75, 0.72, 0.7], "chart_sma20": [0.87, 0.86, 0.86, 0.86, 0.87, 0.87, 0.87, 0.87, 0.87, 0.87, 0.88, 0.88, 0.89, 0.89, 0.9, 0.9, 0.9, 0.9, 0.9, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.91, 0.9, 0.9, 0.89, 0.89, 0.88, 0.88, 0.87, 0.87, 0.86, 0.86, 0.85, 0.85, 0.85, 0.84, 0.84, 0.84, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.84, 0.84, 0.84, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.86, 0.86, 0.86, 0.86, 0.86, 0.86, 0.86, 0.87, 0.87, 0.87, 0.87, 0.87, 0.86, 0.86, 0.86, 0.86, 0.85, 0.85, 0.85, 0.85, 0.84, 0.84, 0.84, 0.84, 0.83, 0.83, 0.82, 0.82, 0.81, 0.8], "chart_lbb": [0.84, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.82, 0.81, 0.81, 0.82, 0.82, 0.83, 0.83, 0.83, 0.83, 0.83, 0.84, 0.85, 0.85, 0.86, 0.86, 0.86, 0.86, 0.86, 0.85, 0.84, 0.84, 0.84, 0.84, 0.83, 0.83, 0.82, 0.81, 0.81, 0.8, 0.8, 0.79, 0.79, 0.78, 0.78, 0.78, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.8, 0.79, 0.79, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.81, 0.81, 0.81, 0.82, 0.82, 0.81, 0.82, 0.82, 0.82, 0.82, 0.82, 0.82, 0.82, 0.82, 0.82, 0.83, 0.83, 0.84, 0.84, 0.84, 0.84, 0.83, 0.82, 0.81, 0.81, 0.81, 0.8, 0.8, 0.8, 0.8, 0.79, 0.79, 0.79, 0.79, 0.78, 0.77, 0.76, 0.74, 0.72]}, {"ticker": "0861.HK", "tv_ticker": "HKEX:861", "price": 2.1, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 2, "sl": 1.85, "tp": 2.52, "rsi": 27.9, "dd_52w": -46.8, "turnover_m": 7.5, "div_yield": 3.33, "earn_label": "\u5f37\u52c1\u6210\u9577 (+39.8%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [3.09, 3.0, 3.03, 3.01, 2.97, 2.98, 2.94, 2.97, 3.0, 3.04, 3.03, 2.93, 2.97, 2.92, 2.86, 2.84, 2.73, 2.79, 2.81, 2.83, 2.79, 2.82, 2.81, 2.79, 2.7, 2.73, 2.7, 2.69, 2.67, 2.65, 2.66, 2.69, 2.67, 2.57, 2.57, 2.61, 2.64, 2.63, 2.6, 2.58, 2.62, 2.65, 2.65, 2.66, 2.66, 2.73, 2.71, 2.65, 2.63, 2.74, 2.77, 2.84, 2.79, 2.77, 2.78, 2.74, 2.75, 2.79, 2.86, 2.78, 2.73, 2.72, 2.72, 2.66, 2.9, 2.8, 2.66, 2.69, 2.58, 2.57, 2.6, 2.6, 2.67, 2.69, 2.73, 2.67, 2.7, 2.53, 2.5, 2.47, 2.66, 2.57, 2.52, 2.47, 2.49, 2.48, 2.51, 2.52, 2.51, 2.55, 2.52, 2.56, 2.52, 2.64, 2.57, 2.33, 2.29, 2.22, 2.16, 2.1], "chart_sma20": [3.01, 2.99, 2.98, 2.97, 2.97, 2.96, 2.96, 2.95, 2.94, 2.95, 2.95, 2.95, 2.95, 2.96, 2.96, 2.96, 2.95, 2.95, 2.94, 2.94, 2.92, 2.91, 2.9, 2.89, 2.88, 2.86, 2.85, 2.84, 2.82, 2.8, 2.78, 2.77, 2.76, 2.74, 2.73, 2.71, 2.71, 2.7, 2.69, 2.68, 2.67, 2.66, 2.65, 2.65, 2.65, 2.65, 2.65, 2.64, 2.64, 2.65, 2.65, 2.66, 2.67, 2.68, 2.69, 2.69, 2.7, 2.71, 2.72, 2.73, 2.73, 2.74, 2.74, 2.74, 2.75, 2.76, 2.75, 2.76, 2.75, 2.74, 2.74, 2.72, 2.72, 2.71, 2.71, 2.71, 2.71, 2.69, 2.68, 2.66, 2.66, 2.65, 2.64, 2.63, 2.61, 2.59, 2.59, 2.58, 2.57, 2.57, 2.57, 2.57, 2.56, 2.56, 2.55, 2.53, 2.51, 2.49, 2.48, 2.46], "chart_lbb": [2.72, 2.73, 2.75, 2.76, 2.76, 2.76, 2.76, 2.78, 2.8, 2.79, 2.79, 2.79, 2.81, 2.82, 2.82, 2.82, 2.79, 2.77, 2.76, 2.74, 2.73, 2.72, 2.71, 2.7, 2.68, 2.66, 2.64, 2.62, 2.6, 2.6, 2.6, 2.6, 2.6, 2.58, 2.56, 2.55, 2.54, 2.54, 2.53, 2.52, 2.52, 2.53, 2.54, 2.56, 2.56, 2.56, 2.56, 2.56, 2.56, 2.55, 2.54, 2.52, 2.51, 2.52, 2.54, 2.55, 2.55, 2.56, 2.56, 2.59, 2.6, 2.61, 2.62, 2.62, 2.62, 2.62, 2.61, 2.62, 2.61, 2.58, 2.56, 2.54, 2.54, 2.53, 2.53, 2.53, 2.53, 2.5, 2.48, 2.46, 2.45, 2.45, 2.43, 2.41, 2.42, 2.42, 2.41, 2.41, 2.4, 2.4, 2.4, 2.39, 2.39, 2.4, 2.41, 2.37, 2.34, 2.28, 2.22, 2.15]}, {"ticker": "0981.HK", "tv_ticker": "HKEX:981", "price": 53.15, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 46.77, "tp": 63.78, "rsi": 29.1, "dd_52w": -43.2, "turnover_m": 3266.0, "div_yield": 0, "earn_label": "\u5f37\u52c1\u6210\u9577 (+99.4%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [79.2, 75.0, 72.85, 71.85, 71.7, 76.95, 75.45, 74.7, 72.65, 73.25, 75.6, 73.5, 72.95, 74.0, 73.0, 73.5, 68.8, 68.05, 67.95, 68.85, 68.35, 68.8, 69.45, 68.65, 67.2, 69.8, 69.75, 71.8, 68.85, 68.7, 67.15, 67.7, 64.7, 63.45, 64.75, 64.7, 65.05, 68.9, 68.9, 70.95, 69.55, 72.5, 71.35, 75.1, 76.5, 75.6, 74.7, 74.95, 74.4, 75.3, 74.45, 75.95, 77.35, 79.2, 77.0, 74.5, 77.25, 77.85, 78.1, 75.55, 76.6, 79.3, 77.25, 75.4, 72.2, 70.45, 68.75, 67.45, 67.6, 70.35, 71.55, 70.0, 69.8, 70.35, 70.4, 67.7, 71.1, 69.4, 69.85, 67.6, 68.0, 64.6, 62.55, 61.25, 61.5, 61.8, 60.85, 64.2, 63.75, 63.1, 62.2, 62.5, 61.85, 61.7, 59.75, 56.9, 54.15, 55.2, 56.5, 53.15], "chart_sma20": [79.55, 79.33, 78.49, 77.53, 76.57, 75.94, 75.53, 75.39, 75.02, 75.01, 74.99, 74.97, 75.16, 75.27, 75.22, 75.15, 74.89, 74.29, 73.55, 72.99, 72.45, 72.14, 71.97, 71.81, 71.58, 71.22, 70.94, 70.8, 70.6, 70.38, 69.95, 69.66, 69.25, 68.72, 68.31, 67.87, 67.68, 67.73, 67.77, 67.88, 67.94, 68.12, 68.22, 68.54, 69.01, 69.3, 69.54, 69.7, 69.98, 70.31, 70.67, 71.09, 71.72, 72.51, 73.12, 73.61, 74.22, 74.67, 75.13, 75.36, 75.71, 76.05, 76.34, 76.36, 76.14, 75.89, 75.59, 75.21, 74.87, 74.63, 74.48, 74.18, 73.81, 73.36, 73.03, 72.69, 72.39, 71.96, 71.55, 71.15, 70.72, 69.99, 69.25, 68.55, 68.01, 67.58, 67.18, 67.02, 66.83, 66.47, 66.0, 65.62, 65.23, 64.79, 64.26, 63.72, 62.87, 62.16, 61.5, 60.77], "chart_lbb": [66.35, 65.97, 65.76, 65.92, 66.58, 68.01, 68.46, 68.37, 68.27, 68.26, 68.25, 68.21, 68.91, 69.19, 69.08, 68.96, 68.09, 67.28, 67.22, 67.13, 67.01, 66.61, 66.32, 65.97, 65.39, 65.53, 65.58, 65.71, 65.53, 65.39, 65.42, 65.35, 64.69, 64.04, 63.76, 63.75, 63.4, 63.41, 63.43, 63.33, 63.33, 63.09, 63.01, 62.49, 62.03, 61.73, 61.6, 61.45, 61.48, 61.51, 61.82, 62.05, 62.79, 63.88, 65.09, 66.62, 68.33, 69.13, 70.1, 70.73, 71.96, 72.29, 73.27, 73.31, 72.58, 71.5, 70.18, 68.69, 67.52, 67.0, 66.73, 66.22, 65.76, 65.6, 65.36, 64.69, 64.65, 64.57, 64.7, 64.36, 64.3, 64.38, 63.81, 62.79, 61.72, 60.82, 59.82, 59.54, 59.21, 58.86, 58.57, 58.28, 57.98, 57.8, 57.45, 56.37, 55.2, 54.4, 54.24, 53.2]}, {"ticker": "1024.HK", "tv_ticker": "HKEX:1024", "price": 45.6, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 40.13, "tp": 54.72, "rsi": 13.9, "dd_52w": -50.8, "turnover_m": 2025.7, "div_yield": 1.51, "earn_label": "\u5f37\u52c1\u6210\u9577 (+30.9%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [74.65, 72.35, 73.45, 71.45, 70.95, 72.55, 68.25, 69.8, 69.5, 69.7, 69.1, 67.1, 66.8, 64.65, 63.5, 64.95, 64.0, 68.55, 70.65, 68.65, 68.4, 67.8, 68.35, 68.95, 67.4, 67.5, 69.2, 68.25, 66.65, 67.15, 66.75, 67.45, 64.45, 64.1, 65.2, 65.35, 66.3, 66.7, 64.35, 64.6, 63.8, 64.5, 63.75, 66.25, 73.6, 75.5, 73.75, 71.9, 74.7, 80.25, 78.45, 81.95, 79.55, 78.35, 76.75, 76.05, 78.8, 79.1, 81.25, 78.6, 78.8, 82.3, 82.95, 80.15, 77.0, 73.45, 73.15, 73.0, 71.25, 69.3, 70.4, 70.9, 69.55, 68.45, 68.6, 66.5, 68.55, 66.65, 66.35, 63.6, 62.85, 60.75, 60.25, 59.55, 59.6, 61.45, 60.55, 61.4, 60.85, 60.2, 59.15, 60.0, 59.85, 59.0, 55.35, 53.8, 51.7, 52.8, 53.05, 45.6], "chart_sma20": [79.53, 78.92, 78.0, 77.14, 76.3, 75.64, 74.61, 73.91, 73.36, 73.1, 72.73, 72.28, 71.97, 71.5, 70.9, 70.46, 69.99, 69.67, 69.39, 69.03, 68.72, 68.49, 68.24, 68.11, 67.93, 67.68, 67.73, 67.65, 67.51, 67.38, 67.26, 67.28, 67.16, 67.13, 67.22, 67.24, 67.35, 67.26, 66.95, 66.74, 66.51, 66.35, 66.12, 65.98, 66.29, 66.69, 66.92, 67.1, 67.51, 68.16, 68.75, 69.47, 70.23, 70.94, 71.52, 72.05, 72.68, 73.3, 74.14, 74.84, 75.59, 76.48, 77.44, 78.14, 78.31, 78.2, 78.17, 78.23, 78.06, 77.51, 77.11, 76.56, 76.06, 75.56, 75.15, 74.68, 74.16, 73.54, 72.8, 72.05, 71.25, 70.17, 69.04, 68.01, 67.14, 66.54, 65.91, 65.33, 64.81, 64.35, 63.79, 63.24, 62.76, 62.28, 61.62, 60.99, 60.14, 59.45, 58.79, 57.89], "chart_lbb": [67.02, 66.26, 66.69, 66.66, 66.74, 67.05, 67.95, 68.52, 68.58, 68.12, 67.71, 66.92, 66.1, 64.87, 63.66, 62.88, 62.03, 62.04, 62.37, 62.72, 62.98, 63.01, 63.27, 63.37, 63.38, 63.67, 63.67, 63.7, 63.64, 63.65, 63.61, 63.63, 63.3, 63.19, 63.54, 63.61, 64.02, 63.97, 63.82, 63.55, 63.17, 62.94, 62.66, 62.79, 61.65, 60.49, 60.04, 59.89, 59.54, 58.37, 57.96, 57.21, 57.42, 57.98, 58.61, 59.33, 59.92, 60.56, 61.66, 63.06, 64.92, 66.78, 69.38, 71.96, 72.48, 72.1, 71.98, 72.25, 71.48, 69.95, 68.93, 68.26, 67.33, 66.27, 65.38, 64.18, 63.52, 62.66, 62.1, 60.97, 59.92, 59.18, 58.95, 58.51, 57.92, 57.49, 57.05, 56.92, 56.66, 56.24, 55.89, 55.93, 55.93, 55.82, 55.17, 54.07, 53.01, 52.28, 51.85, 49.14]}, {"ticker": "1109.HK", "tv_ticker": "HKEX:1109", "price": 27.96, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 24.6, "tp": 33.55, "rsi": 23.9, "dd_52w": -17.5, "turnover_m": 466.1, "div_yield": 5.15, "earn_label": "\u5f37\u52c1\u6210\u9577 (+16.2%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [28.26, 28.06, 28.42, 28.04, 27.72, 28.24, 27.84, 29.08, 29.64, 30.7, 30.7, 30.5, 30.3, 29.66, 29.32, 30.06, 29.78, 30.44, 30.68, 30.6, 30.88, 30.16, 30.64, 30.36, 29.42, 29.56, 29.66, 29.2, 28.1, 28.2, 28.18, 28.24, 27.94, 27.3, 27.38, 27.12, 27.38, 27.58, 27.9, 27.78, 27.22, 27.5, 27.2, 27.72, 29.12, 29.82, 29.38, 29.6, 29.2, 29.18, 29.3, 29.22, 29.66, 29.26, 28.58, 29.64, 28.76, 28.74, 28.22, 28.0, 28.48, 29.8, 31.18, 30.68, 29.7, 30.3, 31.94, 32.0, 31.68, 32.06, 32.1, 32.0, 31.76, 30.96, 31.12, 31.16, 32.2, 31.86, 32.58, 31.88, 31.78, 31.26, 30.56, 29.96, 30.18, 30.92, 30.84, 30.6, 30.64, 30.3, 30.08, 30.52, 31.1, 30.48, 29.52, 29.38, 28.5, 28.76, 28.8, 27.96], "chart_sma20": [29.27, 29.15, 29.1, 29.05, 28.99, 28.96, 28.9, 28.88, 28.89, 28.98, 29.06, 29.11, 29.17, 29.17, 29.14, 29.18, 29.2, 29.25, 29.32, 29.4, 29.53, 29.64, 29.75, 29.86, 29.95, 30.02, 30.11, 30.11, 30.04, 29.91, 29.79, 29.67, 29.55, 29.44, 29.34, 29.19, 29.07, 28.93, 28.79, 28.65, 28.47, 28.33, 28.16, 28.03, 28.01, 28.03, 28.01, 28.03, 28.09, 28.14, 28.19, 28.24, 28.33, 28.43, 28.49, 28.61, 28.68, 28.74, 28.75, 28.77, 28.83, 28.94, 29.14, 29.29, 29.32, 29.34, 29.47, 29.59, 29.72, 29.86, 30.0, 30.14, 30.24, 30.33, 30.46, 30.53, 30.7, 30.86, 31.08, 31.27, 31.44, 31.51, 31.48, 31.44, 31.47, 31.5, 31.44, 31.37, 31.32, 31.23, 31.13, 31.06, 31.03, 31.0, 30.92, 30.83, 30.65, 30.49, 30.3, 30.11], "chart_lbb": [28.39, 28.29, 28.19, 28.02, 27.8, 27.72, 27.57, 27.57, 27.56, 27.42, 27.32, 27.27, 27.25, 27.25, 27.25, 27.25, 27.25, 27.22, 27.2, 27.21, 27.31, 27.51, 27.66, 27.92, 28.27, 28.53, 29.01, 29.04, 28.65, 28.34, 28.08, 27.87, 27.62, 27.26, 26.97, 26.65, 26.43, 26.29, 26.24, 26.22, 26.19, 26.17, 26.24, 26.4, 26.43, 26.39, 26.43, 26.38, 26.35, 26.33, 26.32, 26.31, 26.3, 26.42, 26.54, 26.71, 26.87, 27.01, 27.05, 27.08, 27.3, 27.5, 27.61, 27.77, 27.79, 27.77, 27.51, 27.33, 27.28, 27.22, 27.2, 27.22, 27.25, 27.36, 27.58, 27.67, 27.88, 28.15, 28.57, 29.2, 29.83, 30.09, 30.01, 29.86, 29.98, 30.09, 30.02, 29.93, 29.85, 29.74, 29.61, 29.57, 29.57, 29.53, 29.31, 29.09, 28.73, 28.49, 28.42, 28.11]}, {"ticker": "1336.HK", "tv_ticker": "HKEX:1336", "price": 46.78, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 41.17, "tp": 56.14, "rsi": 29.4, "dd_52w": -28.9, "turnover_m": 439.5, "div_yield": 6.23, "earn_label": "\u5f37\u52c1\u6210\u9577 (+88.0%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [49.45, 48.41, 48.08, 48.25, 47.7, 50.04, 48.87, 50.58, 49.84, 51.72, 52.45, 51.35, 50.9, 49.18, 49.4, 48.92, 46.32, 46.26, 47.14, 47.08, 47.06, 46.38, 46.96, 47.16, 46.26, 46.88, 49.2, 50.0, 49.16, 50.15, 49.02, 48.78, 50.95, 50.1, 51.7, 52.35, 54.4, 54.9, 55.6, 55.25, 54.95, 54.5, 54.3, 56.2, 59.2, 61.8, 62.8, 61.35, 61.35, 60.85, 61.85, 61.25, 61.95, 62.2, 60.7, 62.35, 61.95, 58.95, 58.4, 60.45, 62.6, 63.2, 65.15, 63.55, 61.3, 60.95, 62.45, 61.4, 60.45, 62.1, 61.6, 60.4, 59.4, 58.35, 59.2, 58.9, 60.5, 57.0, 58.05, 55.75, 55.25, 54.55, 53.8, 52.4, 52.3, 53.15, 52.15, 52.9, 52.9, 52.2, 51.5, 51.65, 53.0, 53.5, 52.25, 51.45, 48.04, 49.22, 49.82, 46.78], "chart_sma20": [48.2, 48.35, 48.48, 48.64, 48.75, 48.97, 49.1, 49.27, 49.46, 49.67, 49.69, 49.66, 49.79, 49.86, 49.84, 49.81, 49.63, 49.42, 49.23, 49.1, 48.98, 48.88, 48.82, 48.77, 48.69, 48.54, 48.55, 48.52, 48.49, 48.41, 48.24, 48.11, 48.11, 48.16, 48.27, 48.45, 48.85, 49.28, 49.7, 50.11, 50.51, 50.91, 51.28, 51.73, 52.38, 53.13, 53.81, 54.37, 54.98, 55.52, 56.16, 56.78, 57.33, 57.94, 58.39, 58.89, 59.26, 59.47, 59.61, 59.87, 60.25, 60.68, 61.23, 61.59, 61.7, 61.66, 61.64, 61.64, 61.6, 61.66, 61.65, 61.61, 61.48, 61.29, 61.21, 61.04, 60.97, 60.87, 60.85, 60.62, 60.25, 59.82, 59.25, 58.69, 58.24, 57.85, 57.34, 56.91, 56.53, 56.04, 55.53, 55.1, 54.78, 54.53, 54.19, 53.81, 53.19, 52.8, 52.39, 51.94], "chart_lbb": [43.57, 43.89, 44.22, 44.7, 45.09, 45.55, 45.9, 46.16, 46.77, 46.95, 46.89, 46.96, 47.11, 47.36, 47.33, 47.27, 46.65, 46.12, 45.85, 45.6, 45.37, 45.09, 44.95, 44.83, 44.63, 44.44, 44.45, 44.48, 44.48, 44.61, 44.93, 45.12, 45.11, 45.06, 44.83, 44.56, 44.27, 44.14, 43.95, 43.99, 44.2, 44.68, 45.16, 45.56, 45.92, 45.93, 45.67, 45.78, 46.22, 46.69, 47.46, 48.53, 49.25, 50.34, 51.3, 52.19, 52.79, 53.32, 53.71, 54.33, 55.1, 56.14, 57.36, 58.4, 58.7, 58.64, 58.65, 58.65, 58.56, 58.63, 58.62, 58.53, 58.26, 57.8, 57.61, 57.34, 57.28, 56.87, 56.8, 55.97, 55.13, 54.3, 53.7, 52.74, 51.78, 51.14, 50.54, 50.12, 49.73, 49.51, 49.25, 49.03, 49.0, 48.98, 49.01, 49.01, 48.82, 48.48, 48.64, 47.76]}, {"ticker": "1516.HK", "tv_ticker": "HKEX:1516", "price": 0.88, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 0.77, "tp": 1.06, "rsi": 18.9, "dd_52w": -60.4, "turnover_m": 18.7, "div_yield": 13.45, "earn_label": "\u6eab\u548c\u5fa9\u7526 (+1.8%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [1.55, 1.55, 1.55, 1.53, 1.53, 1.57, 1.57, 1.64, 1.68, 1.71, 1.68, 1.68, 1.66, 1.6, 1.6, 1.59, 1.55, 1.56, 1.56, 1.55, 1.53, 1.53, 1.53, 1.52, 1.5, 1.49, 1.49, 1.46, 1.43, 1.44, 1.42, 1.44, 1.42, 1.4, 1.4, 1.42, 1.41, 1.41, 1.4, 1.41, 1.4, 1.39, 1.4, 1.4, 1.41, 1.43, 1.41, 1.42, 1.41, 1.37, 1.38, 1.4, 1.4, 1.4, 1.38, 1.39, 1.4, 1.41, 1.4, 1.42, 1.41, 1.41, 1.49, 1.44, 1.39, 1.39, 1.41, 1.42, 1.4, 1.38, 1.38, 1.38, 1.37, 1.36, 1.34, 1.33, 1.33, 1.3, 1.35, 1.33, 1.33, 1.29, 1.31, 1.31, 1.31, 1.34, 1.38, 1.26, 1.24, 1.24, 1.25, 1.21, 1.2, 1.16, 1.11, 1.11, 1.07, 1.14, 1.16, 0.88], "chart_sma20": [1.58, 1.57, 1.57, 1.57, 1.57, 1.57, 1.57, 1.57, 1.58, 1.58, 1.59, 1.59, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.59, 1.59, 1.59, 1.59, 1.59, 1.59, 1.58, 1.57, 1.56, 1.55, 1.53, 1.52, 1.51, 1.5, 1.49, 1.48, 1.47, 1.47, 1.46, 1.45, 1.45, 1.44, 1.43, 1.43, 1.42, 1.42, 1.41, 1.41, 1.41, 1.41, 1.41, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.41, 1.41, 1.41, 1.41, 1.41, 1.41, 1.41, 1.41, 1.41, 1.4, 1.4, 1.4, 1.4, 1.4, 1.39, 1.39, 1.38, 1.38, 1.38, 1.37, 1.36, 1.35, 1.35, 1.35, 1.35, 1.34, 1.33, 1.32, 1.32, 1.31, 1.3, 1.29, 1.28, 1.27, 1.26, 1.25, 1.24, 1.21], "chart_lbb": [1.53, 1.54, 1.54, 1.53, 1.53, 1.53, 1.53, 1.52, 1.51, 1.49, 1.49, 1.48, 1.49, 1.49, 1.49, 1.49, 1.49, 1.49, 1.48, 1.48, 1.48, 1.47, 1.47, 1.47, 1.46, 1.45, 1.44, 1.43, 1.41, 1.4, 1.39, 1.39, 1.39, 1.38, 1.37, 1.37, 1.36, 1.36, 1.35, 1.35, 1.35, 1.35, 1.35, 1.36, 1.36, 1.37, 1.38, 1.38, 1.38, 1.38, 1.37, 1.38, 1.38, 1.38, 1.37, 1.37, 1.37, 1.37, 1.37, 1.37, 1.37, 1.37, 1.36, 1.36, 1.36, 1.36, 1.36, 1.36, 1.35, 1.36, 1.36, 1.35, 1.35, 1.34, 1.34, 1.33, 1.32, 1.3, 1.3, 1.29, 1.29, 1.27, 1.28, 1.28, 1.27, 1.27, 1.28, 1.27, 1.25, 1.24, 1.23, 1.21, 1.2, 1.18, 1.14, 1.11, 1.08, 1.07, 1.06, 0.98]}, {"ticker": "2013.HK", "tv_ticker": "HKEX:2013", "price": 1.48, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 1.3, "tp": 1.78, "rsi": 29.6, "dd_52w": -50.7, "turnover_m": 107.9, "div_yield": 0, "earn_label": "\u5f37\u52c1\u6210\u9577 (+73.0%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [2.27, 2.27, 2.3, 2.25, 2.19, 2.22, 2.15, 2.18, 2.18, 2.17, 2.18, 2.1, 2.07, 2.02, 1.97, 2.0, 1.95, 2.0, 2.0, 1.99, 1.98, 1.99, 2.01, 1.94, 1.88, 1.91, 1.98, 1.96, 1.93, 1.92, 1.86, 1.92, 1.87, 1.81, 1.79, 1.81, 1.81, 1.82, 1.8, 1.8, 1.85, 1.83, 1.84, 1.91, 1.93, 1.98, 2.01, 1.96, 2.01, 2.44, 2.33, 2.59, 2.43, 2.41, 2.29, 2.35, 2.36, 2.33, 2.34, 2.48, 2.46, 2.42, 2.46, 2.42, 2.28, 2.18, 2.0, 1.98, 1.94, 2.0, 1.99, 2.02, 2.06, 2.05, 2.01, 2.0, 2.06, 1.96, 1.95, 1.91, 1.93, 1.82, 1.73, 1.74, 1.73, 1.77, 1.76, 1.83, 1.84, 1.8, 1.7, 1.69, 1.72, 1.78, 1.7, 1.68, 1.54, 1.52, 1.56, 1.48], "chart_sma20": [2.51, 2.49, 2.46, 2.43, 2.39, 2.36, 2.33, 2.31, 2.29, 2.28, 2.26, 2.25, 2.23, 2.22, 2.2, 2.18, 2.17, 2.15, 2.14, 2.12, 2.11, 2.09, 2.08, 2.06, 2.05, 2.03, 2.03, 2.01, 2.0, 1.99, 1.97, 1.96, 1.95, 1.94, 1.93, 1.92, 1.92, 1.91, 1.9, 1.89, 1.88, 1.87, 1.87, 1.86, 1.87, 1.87, 1.87, 1.87, 1.88, 1.9, 1.93, 1.96, 1.99, 2.02, 2.04, 2.07, 2.1, 2.12, 2.15, 2.18, 2.21, 2.24, 2.27, 2.3, 2.32, 2.33, 2.33, 2.33, 2.32, 2.3, 2.29, 2.26, 2.24, 2.22, 2.21, 2.19, 2.17, 2.16, 2.14, 2.11, 2.08, 2.05, 2.01, 1.98, 1.95, 1.93, 1.92, 1.91, 1.91, 1.9, 1.88, 1.87, 1.85, 1.84, 1.82, 1.81, 1.78, 1.76, 1.74, 1.72], "chart_lbb": [2.04, 2.02, 2.03, 2.02, 2.04, 2.08, 2.08, 2.1, 2.1, 2.1, 2.11, 2.1, 2.07, 2.04, 2.0, 1.98, 1.94, 1.92, 1.91, 1.89, 1.88, 1.88, 1.88, 1.87, 1.85, 1.84, 1.84, 1.84, 1.85, 1.85, 1.86, 1.86, 1.86, 1.83, 1.8, 1.79, 1.77, 1.76, 1.75, 1.74, 1.74, 1.74, 1.75, 1.75, 1.75, 1.74, 1.74, 1.74, 1.73, 1.61, 1.58, 1.5, 1.49, 1.49, 1.51, 1.54, 1.56, 1.6, 1.64, 1.68, 1.72, 1.78, 1.84, 1.9, 1.95, 1.99, 1.99, 1.99, 1.98, 1.93, 1.89, 1.87, 1.85, 1.83, 1.81, 1.79, 1.78, 1.75, 1.73, 1.73, 1.73, 1.72, 1.72, 1.73, 1.72, 1.71, 1.69, 1.68, 1.67, 1.66, 1.63, 1.61, 1.6, 1.61, 1.6, 1.59, 1.57, 1.54, 1.52, 1.48]}, {"ticker": "3311.HK", "tv_ticker": "HKEX:3311", "price": 8.48, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 7.46, "tp": 10.18, "rsi": 26.6, "dd_52w": -30.1, "turnover_m": 55.8, "div_yield": 6.72, "earn_label": "\u6eab\u548c\u5fa9\u7526 (+2.1%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [8.99, 8.84, 9.0, 9.15, 9.11, 9.06, 9.15, 9.48, 9.54, 9.65, 9.78, 9.61, 9.6, 9.49, 9.49, 9.44, 9.26, 9.3, 9.28, 9.47, 9.43, 9.29, 9.48, 9.8, 9.68, 9.68, 9.74, 9.69, 9.38, 9.35, 9.33, 9.71, 9.68, 9.52, 9.42, 9.29, 9.26, 9.31, 9.34, 9.32, 9.3, 9.18, 9.12, 9.25, 9.26, 9.25, 8.94, 8.95, 8.98, 8.97, 9.03, 8.74, 8.82, 8.83, 8.85, 8.9, 8.9, 8.99, 9.03, 9.18, 9.1, 9.32, 9.47, 9.38, 9.2, 9.22, 9.53, 9.51, 9.5, 9.6, 9.55, 9.68, 9.57, 9.45, 9.42, 9.41, 9.62, 9.76, 9.82, 9.74, 9.29, 9.27, 9.24, 9.23, 9.3, 9.31, 9.36, 9.39, 9.55, 9.4, 9.38, 9.18, 9.1, 9.03, 8.95, 8.87, 8.6, 8.64, 8.83, 8.48], "chart_sma20": [9.89, 9.83, 9.79, 9.76, 9.73, 9.7, 9.66, 9.64, 9.62, 9.61, 9.59, 9.57, 9.55, 9.52, 9.49, 9.45, 9.41, 9.37, 9.32, 9.33, 9.36, 9.38, 9.4, 9.44, 9.46, 9.49, 9.52, 9.53, 9.53, 9.51, 9.49, 9.49, 9.5, 9.5, 9.5, 9.49, 9.49, 9.49, 9.49, 9.49, 9.48, 9.47, 9.46, 9.43, 9.41, 9.39, 9.35, 9.31, 9.29, 9.27, 9.25, 9.21, 9.16, 9.13, 9.1, 9.08, 9.06, 9.05, 9.03, 9.02, 9.01, 9.02, 9.04, 9.04, 9.04, 9.04, 9.07, 9.1, 9.12, 9.15, 9.18, 9.23, 9.27, 9.3, 9.32, 9.35, 9.39, 9.43, 9.46, 9.49, 9.5, 9.5, 9.49, 9.48, 9.49, 9.49, 9.48, 9.48, 9.48, 9.47, 9.46, 9.43, 9.41, 9.39, 9.37, 9.34, 9.29, 9.23, 9.18, 9.12], "chart_lbb": [9.29, 9.07, 8.94, 8.86, 8.78, 8.71, 8.65, 8.63, 8.62, 8.61, 8.62, 8.62, 8.62, 8.63, 8.65, 8.67, 8.7, 8.74, 8.81, 8.82, 8.87, 8.95, 9.01, 9.03, 9.07, 9.14, 9.19, 9.2, 9.18, 9.16, 9.15, 9.15, 9.15, 9.15, 9.14, 9.12, 9.12, 9.12, 9.13, 9.12, 9.1, 9.08, 9.03, 9.03, 9.02, 9.02, 8.97, 8.93, 8.88, 8.84, 8.81, 8.76, 8.75, 8.72, 8.7, 8.68, 8.67, 8.67, 8.68, 8.69, 8.7, 8.69, 8.65, 8.64, 8.64, 8.64, 8.62, 8.61, 8.61, 8.6, 8.61, 8.65, 8.7, 8.77, 8.84, 8.91, 8.98, 9.03, 9.08, 9.11, 9.16, 9.15, 9.12, 9.09, 9.11, 9.13, 9.12, 9.11, 9.11, 9.1, 9.09, 9.06, 9.02, 8.96, 8.9, 8.82, 8.69, 8.61, 8.6, 8.52]}, {"ticker": "3319.HK", "tv_ticker": "HKEX:3319", "price": 1.92, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 1.69, "tp": 2.3, "rsi": 26.8, "dd_52w": -49.8, "turnover_m": 5.2, "div_yield": 7.07, "earn_label": "\u8870\u9000\u4e2d (-8.3%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [2.46, 2.4, 2.42, 2.47, 2.43, 2.51, 2.47, 2.53, 2.55, 2.56, 2.49, 2.51, 2.47, 2.44, 2.44, 2.46, 2.36, 2.43, 2.46, 2.46, 2.41, 2.4, 2.38, 2.4, 2.37, 2.38, 2.35, 2.29, 2.27, 2.26, 2.22, 2.29, 2.28, 2.22, 2.27, 2.23, 2.33, 2.26, 2.28, 2.23, 2.3, 2.27, 2.28, 2.3, 2.28, 2.33, 2.32, 2.31, 2.28, 2.24, 2.24, 2.26, 2.33, 2.32, 2.34, 2.31, 2.27, 2.32, 2.27, 2.26, 2.3, 2.31, 2.36, 2.34, 2.24, 2.27, 2.27, 2.31, 2.29, 2.25, 2.29, 2.28, 2.24, 2.18, 2.16, 2.14, 2.16, 2.16, 2.16, 2.1, 2.19, 2.12, 2.05, 2.04, 2.1, 2.11, 2.09, 2.09, 2.07, 2.07, 2.04, 2.04, 2.06, 2.04, 2.07, 1.99, 1.94, 1.96, 2.0, 1.92], "chart_sma20": [2.7, 2.67, 2.65, 2.63, 2.61, 2.59, 2.57, 2.56, 2.55, 2.54, 2.53, 2.52, 2.51, 2.51, 2.5, 2.49, 2.48, 2.47, 2.47, 2.47, 2.46, 2.46, 2.46, 2.46, 2.46, 2.45, 2.44, 2.43, 2.42, 2.4, 2.39, 2.38, 2.37, 2.36, 2.35, 2.34, 2.34, 2.33, 2.32, 2.31, 2.3, 2.29, 2.29, 2.28, 2.28, 2.28, 2.28, 2.28, 2.28, 2.28, 2.28, 2.28, 2.28, 2.28, 2.29, 2.29, 2.29, 2.29, 2.29, 2.29, 2.29, 2.29, 2.3, 2.3, 2.3, 2.29, 2.29, 2.29, 2.29, 2.29, 2.3, 2.3, 2.29, 2.28, 2.28, 2.27, 2.26, 2.25, 2.25, 2.24, 2.24, 2.23, 2.21, 2.2, 2.19, 2.18, 2.17, 2.16, 2.15, 2.14, 2.13, 2.12, 2.11, 2.1, 2.09, 2.09, 2.08, 2.07, 2.06, 2.05], "chart_lbb": [2.41, 2.37, 2.36, 2.34, 2.33, 2.33, 2.34, 2.35, 2.36, 2.37, 2.38, 2.39, 2.39, 2.39, 2.39, 2.39, 2.37, 2.37, 2.37, 2.37, 2.36, 2.36, 2.36, 2.35, 2.34, 2.33, 2.32, 2.29, 2.27, 2.26, 2.23, 2.22, 2.22, 2.2, 2.19, 2.18, 2.18, 2.17, 2.17, 2.18, 2.18, 2.18, 2.18, 2.19, 2.2, 2.21, 2.21, 2.21, 2.21, 2.21, 2.21, 2.21, 2.21, 2.22, 2.22, 2.22, 2.22, 2.23, 2.22, 2.23, 2.23, 2.23, 2.23, 2.23, 2.22, 2.22, 2.22, 2.22, 2.22, 2.22, 2.23, 2.23, 2.22, 2.2, 2.18, 2.16, 2.14, 2.13, 2.12, 2.09, 2.09, 2.07, 2.05, 2.03, 2.02, 2.02, 2.01, 2.01, 2.0, 2.0, 2.0, 2.0, 2.01, 2.0, 2.0, 1.99, 1.96, 1.95, 1.94, 1.92]}, {"ticker": "3958.HK", "tv_ticker": "HKEX:3958", "price": 5.42, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 4.77, "tp": 6.5, "rsi": 27.3, "dd_52w": -37.9, "turnover_m": 48.0, "div_yield": 4.43, "earn_label": "\u5f37\u52c1\u6210\u9577 (+46.5%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [7.71, 7.26, 7.24, 7.14, 7.12, 7.37, 7.18, 7.43, 7.28, 7.26, 7.3, 7.11, 7.25, 7.15, 7.18, 7.25, 6.81, 6.74, 6.76, 6.74, 6.77, 6.83, 6.84, 6.73, 6.55, 6.73, 6.94, 7.08, 6.92, 6.78, 6.67, 6.88, 7.01, 7.08, 7.18, 7.08, 7.12, 7.01, 6.91, 6.89, 6.84, 6.81, 6.83, 6.98, 7.1, 7.5, 7.37, 7.06, 7.1, 7.2, 7.23, 7.1, 6.95, 6.93, 6.87, 6.81, 6.78, 6.81, 6.85, 6.86, 6.77, 6.81, 6.97, 6.79, 6.77, 6.89, 7.01, 7.07, 6.93, 7.04, 6.97, 6.86, 6.77, 6.74, 6.62, 6.57, 6.86, 6.64, 6.5, 6.19, 6.17, 6.03, 5.99, 5.88, 5.81, 5.97, 5.8, 5.87, 5.96, 5.94, 5.94, 5.86, 5.92, 5.94, 5.79, 5.77, 5.51, 5.56, 5.6, 5.42], "chart_sma20": [7.64, 7.6, 7.57, 7.53, 7.5, 7.49, 7.46, 7.45, 7.44, 7.43, 7.41, 7.39, 7.38, 7.37, 7.36, 7.35, 7.32, 7.27, 7.21, 7.16, 7.12, 7.1, 7.08, 7.05, 7.03, 6.99, 6.98, 6.97, 6.95, 6.92, 6.89, 6.88, 6.87, 6.86, 6.86, 6.86, 6.87, 6.89, 6.89, 6.9, 6.9, 6.9, 6.9, 6.91, 6.94, 6.98, 7.0, 7.0, 7.01, 7.03, 7.06, 7.07, 7.07, 7.06, 7.04, 7.03, 7.01, 7.0, 7.0, 7.0, 7.0, 7.0, 7.0, 6.99, 6.98, 6.95, 6.93, 6.93, 6.92, 6.91, 6.9, 6.89, 6.88, 6.87, 6.86, 6.84, 6.85, 6.84, 6.82, 6.79, 6.76, 6.72, 6.67, 6.62, 6.58, 6.53, 6.47, 6.41, 6.36, 6.31, 6.26, 6.21, 6.16, 6.12, 6.08, 6.04, 5.97, 5.92, 5.88, 5.84], "chart_lbb": [7.24, 7.22, 7.18, 7.12, 7.06, 7.05, 7.02, 7.01, 7.0, 6.98, 6.97, 6.94, 6.93, 6.91, 6.89, 6.88, 6.79, 6.72, 6.7, 6.67, 6.67, 6.64, 6.61, 6.56, 6.49, 6.47, 6.46, 6.48, 6.49, 6.48, 6.48, 6.48, 6.5, 6.51, 6.51, 6.53, 6.53, 6.54, 6.55, 6.57, 6.58, 6.57, 6.57, 6.59, 6.66, 6.62, 6.6, 6.6, 6.61, 6.64, 6.7, 6.72, 6.71, 6.7, 6.68, 6.65, 6.62, 6.6, 6.59, 6.59, 6.58, 6.58, 6.59, 6.57, 6.55, 6.6, 6.64, 6.64, 6.64, 6.66, 6.69, 6.7, 6.69, 6.67, 6.63, 6.58, 6.59, 6.57, 6.51, 6.37, 6.25, 6.12, 6.0, 5.87, 5.74, 5.67, 5.58, 5.53, 5.5, 5.48, 5.48, 5.46, 5.46, 5.47, 5.46, 5.45, 5.47, 5.49, 5.52, 5.46]}, {"ticker": "6690.HK", "tv_ticker": "HKEX:6690", "price": 22.82, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 20.08, "tp": 27.38, "rsi": 24.3, "dd_52w": -19.1, "turnover_m": 340.6, "div_yield": 5.9, "earn_label": "\u6eab\u548c\u5fa9\u7526 (+13.6%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [24.6, 25.24, 25.06, 25.4, 25.14, 25.72, 25.82, 26.4, 25.94, 26.74, 26.78, 26.2, 25.94, 25.3, 25.44, 25.82, 25.58, 26.02, 26.12, 26.5, 26.84, 26.58, 26.7, 26.8, 27.04, 27.3, 27.06, 26.58, 26.04, 26.1, 25.96, 26.52, 26.7, 26.18, 26.62, 26.44, 26.26, 25.88, 25.88, 25.36, 24.54, 24.76, 24.3, 25.3, 25.24, 25.46, 25.74, 25.72, 26.0, 26.22, 26.46, 26.38, 26.36, 26.48, 26.5, 26.78, 26.8, 26.32, 25.9, 25.64, 25.9, 25.66, 26.2, 25.8, 25.62, 26.32, 27.0, 27.4, 26.9, 26.92, 27.14, 27.3, 27.2, 27.06, 27.56, 26.98, 27.82, 27.38, 27.36, 26.46, 26.68, 26.08, 25.44, 24.78, 24.74, 25.02, 24.84, 25.26, 25.24, 25.18, 25.06, 25.0, 25.06, 25.08, 24.6, 24.36, 23.36, 23.9, 23.66, 22.82], "chart_sma20": [24.76, 24.77, 24.76, 24.76, 24.77, 24.81, 24.83, 24.89, 24.97, 25.1, 25.22, 25.34, 25.45, 25.51, 25.55, 25.6, 25.63, 25.67, 25.71, 25.79, 25.9, 25.97, 26.05, 26.12, 26.21, 26.29, 26.36, 26.36, 26.37, 26.34, 26.3, 26.31, 26.35, 26.39, 26.45, 26.48, 26.52, 26.51, 26.5, 26.44, 26.33, 26.24, 26.12, 26.04, 25.95, 25.86, 25.79, 25.75, 25.75, 25.75, 25.78, 25.77, 25.75, 25.77, 25.76, 25.78, 25.81, 25.83, 25.83, 25.84, 25.91, 25.96, 26.05, 26.08, 26.1, 26.14, 26.2, 26.29, 26.33, 26.37, 26.4, 26.45, 26.49, 26.52, 26.57, 26.58, 26.63, 26.68, 26.76, 26.8, 26.84, 26.86, 26.82, 26.77, 26.73, 26.66, 26.55, 26.45, 26.36, 26.28, 26.17, 26.06, 25.95, 25.85, 25.7, 25.57, 25.35, 25.18, 24.99, 24.81], "chart_lbb": [23.7, 23.7, 23.71, 23.71, 23.71, 23.67, 23.64, 23.51, 23.53, 23.52, 23.53, 23.7, 24.0, 24.19, 24.31, 24.39, 24.46, 24.5, 24.54, 24.63, 24.79, 24.87, 24.99, 25.05, 25.18, 25.18, 25.21, 25.22, 25.23, 25.21, 25.17, 25.19, 25.23, 25.38, 25.54, 25.62, 25.76, 25.73, 25.68, 25.48, 25.06, 24.8, 24.46, 24.38, 24.32, 24.35, 24.39, 24.4, 24.4, 24.39, 24.39, 24.39, 24.42, 24.4, 24.41, 24.39, 24.35, 24.36, 24.36, 24.39, 24.59, 24.74, 25.12, 25.21, 25.29, 25.38, 25.38, 25.34, 25.36, 25.36, 25.34, 25.31, 25.3, 25.3, 25.27, 25.27, 25.21, 25.23, 25.33, 25.46, 25.56, 25.66, 25.49, 25.21, 24.99, 24.77, 24.51, 24.36, 24.22, 24.09, 23.96, 23.86, 23.77, 23.71, 23.65, 23.53, 23.37, 23.34, 23.34, 23.04]}, {"ticker": "6862.HK", "tv_ticker": "HKEX:6862", "price": 13.91, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 12.24, "tp": 16.69, "rsi": 26.5, "dd_52w": -22.1, "turnover_m": 331.8, "div_yield": 5.19, "earn_label": "\u8870\u9000\u4e2d (-13.6%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [12.83, 12.8, 12.85, 12.7, 12.8, 13.05, 13.06, 13.7, 13.78, 13.96, 14.07, 13.97, 13.84, 13.6, 13.46, 13.59, 13.17, 13.24, 13.57, 13.63, 13.71, 13.75, 14.07, 14.14, 14.02, 13.88, 13.66, 13.6, 13.63, 14.1, 14.02, 14.42, 14.6, 14.66, 14.58, 14.59, 14.77, 14.85, 14.84, 14.61, 14.35, 14.35, 14.2, 14.41, 14.24, 14.13, 14.27, 13.99, 13.99, 14.77, 14.42, 15.74, 15.64, 15.48, 15.5, 15.65, 15.65, 15.8, 15.95, 15.87, 15.93, 15.52, 16.09, 15.98, 15.96, 15.9, 16.38, 17.04, 17.36, 17.68, 17.22, 17.21, 16.63, 17.15, 17.02, 16.87, 16.85, 16.49, 17.51, 17.42, 17.62, 17.49, 16.88, 16.75, 16.91, 17.18, 16.93, 17.16, 16.51, 16.77, 16.01, 16.44, 16.55, 16.5, 16.04, 15.85, 15.17, 15.99, 14.22, 13.91], "chart_sma20": [13.02, 12.99, 12.97, 12.95, 12.95, 12.96, 12.97, 13.01, 13.06, 13.13, 13.17, 13.21, 13.26, 13.28, 13.31, 13.33, 13.33, 13.34, 13.35, 13.38, 13.43, 13.48, 13.54, 13.61, 13.67, 13.71, 13.74, 13.74, 13.73, 13.74, 13.73, 13.76, 13.79, 13.85, 13.9, 13.95, 14.03, 14.11, 14.18, 14.23, 14.26, 14.29, 14.29, 14.31, 14.32, 14.33, 14.36, 14.38, 14.4, 14.43, 14.45, 14.52, 14.57, 14.61, 14.66, 14.71, 14.75, 14.8, 14.86, 14.92, 15.0, 15.06, 15.15, 15.23, 15.32, 15.4, 15.51, 15.66, 15.83, 15.98, 16.12, 16.19, 16.24, 16.32, 16.4, 16.46, 16.52, 16.55, 16.63, 16.71, 16.8, 16.89, 16.93, 16.97, 17.02, 17.08, 17.11, 17.12, 17.07, 17.03, 16.97, 16.93, 16.93, 16.89, 16.84, 16.79, 16.71, 16.68, 16.52, 16.34], "chart_lbb": [12.61, 12.62, 12.61, 12.58, 12.57, 12.58, 12.6, 12.52, 12.48, 12.46, 12.38, 12.35, 12.36, 12.38, 12.41, 12.43, 12.43, 12.44, 12.45, 12.49, 12.56, 12.65, 12.72, 12.85, 13.0, 13.1, 13.21, 13.2, 13.19, 13.18, 13.19, 13.14, 13.07, 13.03, 13.05, 13.06, 13.15, 13.24, 13.28, 13.35, 13.41, 13.48, 13.49, 13.5, 13.53, 13.56, 13.66, 13.75, 13.84, 13.87, 13.92, 13.74, 13.64, 13.6, 13.57, 13.53, 13.51, 13.47, 13.43, 13.43, 13.47, 13.54, 13.62, 13.7, 13.83, 14.01, 14.16, 14.34, 14.55, 14.55, 14.79, 14.79, 14.85, 14.93, 15.02, 15.12, 15.22, 15.3, 15.35, 15.43, 15.51, 15.72, 15.82, 15.95, 16.12, 16.35, 16.45, 16.45, 16.37, 16.37, 16.18, 16.11, 16.1, 16.06, 15.93, 15.78, 15.46, 15.4, 14.88, 14.39]}, {"ticker": "9992.HK", "tv_ticker": "HKEX:9992", "price": 150.7, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 132.62, "tp": 180.84, "rsi": 26.7, "dd_52w": -55.7, "turnover_m": 3347.0, "div_yield": 1.8, "earn_label": "\u5f37\u52c1\u6210\u9577 (+271.2%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [229.8, 221.6, 226.6, 217.4, 217.4, 217.6, 204.8, 221.4, 223.2, 220.0, 220.4, 216.4, 217.4, 211.4, 206.6, 201.4, 199.3, 199.5, 200.2, 204.6, 218.6, 224.8, 215.2, 218.8, 216.0, 215.4, 219.0, 200.4, 190.3, 190.4, 193.4, 194.1, 190.7, 189.2, 195.7, 193.2, 192.9, 201.8, 200.4, 200.2, 199.9, 190.8, 189.3, 193.1, 196.2, 199.5, 200.6, 199.4, 197.0, 197.0, 191.3, 192.0, 189.2, 178.6, 180.8, 197.2, 194.4, 206.0, 219.6, 217.6, 216.2, 231.4, 231.2, 223.6, 226.4, 231.6, 237.2, 242.4, 243.2, 257.2, 269.8, 255.0, 252.2, 247.4, 251.2, 244.4, 248.4, 233.8, 232.8, 225.2, 229.8, 225.0, 212.6, 207.0, 206.2, 207.4, 206.2, 206.0, 204.8, 205.2, 204.8, 208.8, 215.4, 221.8, 212.8, 209.6, 202.2, 217.2, 168.3, 150.7], "chart_sma20": [255.14, 252.88, 251.51, 249.64, 247.69, 245.83, 242.95, 241.04, 239.15, 237.0, 234.37, 230.78, 227.88, 224.83, 222.64, 219.89, 218.23, 216.69, 215.03, 213.85, 213.29, 213.45, 212.88, 212.95, 212.88, 212.77, 213.48, 212.43, 210.78, 209.3, 207.95, 206.84, 205.5, 204.39, 203.85, 203.44, 203.12, 203.23, 203.24, 203.02, 202.09, 200.39, 199.09, 197.81, 196.82, 196.02, 195.1, 195.05, 195.39, 195.72, 195.61, 195.51, 195.43, 194.9, 194.16, 194.36, 194.43, 194.64, 195.61, 196.48, 197.29, 199.32, 201.42, 202.94, 204.45, 206.06, 207.88, 210.03, 212.34, 215.36, 219.28, 222.43, 225.58, 229.02, 232.54, 234.9, 237.6, 238.99, 239.65, 240.03, 240.71, 240.39, 239.46, 238.63, 237.62, 236.41, 234.86, 233.04, 231.12, 228.52, 225.27, 222.96, 221.12, 219.84, 217.92, 216.18, 213.87, 213.04, 209.82, 206.09], "chart_lbb": [221.35, 216.44, 213.23, 208.49, 204.26, 200.53, 194.85, 192.69, 191.13, 189.63, 189.65, 193.32, 196.47, 200.6, 200.29, 201.93, 199.07, 196.69, 195.36, 194.68, 195.48, 195.27, 195.75, 195.73, 195.73, 195.71, 196.64, 195.06, 191.57, 188.58, 186.76, 185.18, 183.3, 181.23, 180.39, 179.52, 178.8, 178.97, 178.98, 178.73, 178.91, 179.33, 178.69, 179.51, 180.64, 182.31, 186.29, 186.36, 186.95, 187.59, 187.31, 187.07, 186.79, 183.72, 181.34, 181.48, 181.57, 181.15, 178.22, 176.56, 175.54, 173.02, 171.98, 172.19, 172.17, 171.68, 170.94, 170.27, 170.45, 169.63, 169.0, 171.46, 175.48, 183.24, 191.82, 197.47, 204.99, 209.86, 211.8, 213.26, 215.87, 214.89, 211.33, 207.69, 203.81, 200.06, 196.09, 192.38, 188.89, 186.65, 186.95, 186.67, 187.43, 188.49, 190.16, 191.19, 193.26, 194.58, 184.59, 170.54]}, {"ticker": "9999.HK", "tv_ticker": "HKEX:9999", "price": 171.8, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 1, "sl": 151.18, "tp": 206.16, "rsi": 28.0, "dd_52w": -30.6, "turnover_m": 1244.6, "div_yield": 2.71, "earn_label": "\u8870\u9000\u4e2d (-29.4%)", "chart_dates": ["10-30", "10-31", "11-03", "11-04", "11-05", "11-06", "11-07", "11-10", "11-11", "11-12", "11-13", "11-14", "11-17", "11-18", "11-19", "11-20", "11-21", "11-24", "11-25", "11-26", "11-27", "11-28", "12-01", "12-02", "12-03", "12-04", "12-05", "12-08", "12-09", "12-10", "12-11", "12-12", "12-15", "12-16", "12-17", "12-18", "12-19", "12-22", "12-23", "12-24", "12-29", "12-30", "12-31", "01-02", "01-05", "01-06", "01-07", "01-08", "01-09", "01-12", "01-13", "01-14", "01-15", "01-16", "01-19", "01-20", "01-21", "01-22", "01-23", "01-26", "01-27", "01-28", "01-29", "01-30", "02-02", "02-03", "02-04", "02-05", "02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26"], "chart_prices": [219.61, 216.61, 219.81, 216.41, 217.01, 219.81, 218.61, 219.21, 219.61, 221.2, 223.2, 219.01, 218.01, 214.62, 215.21, 212.22, 204.23, 216.21, 217.21, 214.82, 214.42, 213.62, 222.0, 224.0, 217.41, 216.93, 217.72, 216.53, 212.33, 210.53, 209.33, 218.12, 216.33, 210.73, 209.93, 211.33, 214.13, 213.93, 212.53, 212.93, 215.93, 221.52, 214.73, 228.51, 222.32, 228.91, 222.32, 219.32, 216.53, 222.92, 222.52, 220.12, 213.13, 215.33, 215.93, 215.73, 207.74, 208.74, 206.74, 208.14, 206.74, 211.73, 206.34, 204.74, 197.65, 198.25, 191.66, 192.36, 188.06, 191.06, 192.76, 194.75, 186.76, 185.46, 187.06, 179.07, 182.17, 179.17, 178.07, 174.78, 178.97, 177.08, 179.57, 181.47, 179.57, 188.96, 183.67, 187.76, 184.17, 183.07, 182.4, 186.9, 186.8, 187.8, 183.3, 182.4, 175.8, 177.1, 176.3, 171.8], "chart_sma20": [232.25, 231.27, 230.26, 229.27, 228.5, 227.53, 226.46, 225.58, 224.83, 224.5, 224.09, 223.46, 223.19, 222.17, 220.94, 220.1, 218.92, 218.22, 217.6, 217.13, 216.87, 216.72, 216.83, 217.21, 217.23, 217.09, 217.04, 216.91, 216.54, 216.01, 215.32, 215.27, 215.19, 215.0, 214.73, 214.69, 215.18, 215.07, 214.83, 214.74, 214.81, 215.21, 214.85, 215.07, 215.32, 215.92, 216.15, 216.29, 216.5, 217.11, 217.77, 217.87, 217.71, 217.94, 218.24, 218.46, 218.14, 217.88, 217.59, 217.35, 216.9, 216.41, 215.99, 214.8, 213.56, 212.03, 210.5, 209.15, 207.73, 206.13, 204.65, 203.38, 202.06, 200.57, 199.12, 197.29, 196.01, 194.53, 193.1, 191.43, 190.04, 188.31, 186.97, 185.81, 184.91, 184.44, 184.04, 183.81, 183.62, 183.22, 182.7, 182.31, 182.31, 182.43, 182.24, 182.4, 182.09, 181.98, 181.89, 181.74], "chart_lbb": [220.5, 217.78, 216.5, 214.5, 212.84, 212.26, 211.88, 211.53, 211.22, 210.87, 210.84, 210.52, 210.03, 209.72, 211.26, 210.48, 207.64, 208.23, 209.16, 209.21, 208.95, 208.67, 208.54, 208.33, 208.35, 208.29, 208.27, 208.19, 207.7, 207.06, 206.56, 206.59, 206.58, 206.16, 205.62, 205.51, 207.42, 207.3, 207.06, 206.92, 206.98, 206.85, 207.12, 206.06, 205.79, 204.62, 204.51, 204.57, 204.92, 205.56, 206.59, 206.64, 206.3, 206.94, 207.85, 208.51, 207.24, 206.33, 205.21, 204.42, 203.12, 202.63, 201.5, 200.75, 198.04, 196.83, 193.58, 190.95, 187.6, 186.03, 185.25, 184.95, 182.82, 181.03, 180.1, 177.95, 176.2, 174.31, 172.46, 170.52, 169.73, 169.97, 170.35, 171.3, 171.27, 172.16, 172.23, 172.52, 172.5, 172.67, 173.15, 174.33, 174.32, 174.18, 174.27, 174.58, 173.72, 173.42, 173.12, 172.38]}];
+        let myChart = null;
+
+        function loadChart(ticker) {
+            const sig = signalsData.find(s => s.ticker === ticker);
+            if (!sig) return;
+
+            document.getElementById('chart_placeholder').classList.add('hidden');
+            const canvas = document.getElementById('myChart');
+            canvas.classList.remove('hidden');
+            
+            document.getElementById('chart_title').innerText = ticker + " (近100日走勢)";
+            const tvLink = document.getElementById('tv_link');
+            tvLink.href = `https://www.tradingview.com/chart/?symbol=${sig.tv_ticker}`;
+            tvLink.classList.remove('hidden');
+
+            const ctx = canvas.getContext('2d');
+            if (myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sig.chart_dates,
+                    datasets: [
+                        {
+                            label: '收盤價',
+                            data: sig.chart_prices,
+                            borderColor: '#3b82f6',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHitRadius: 10
+                        },
+                        {
+                            label: '20日均線',
+                            data: sig.chart_sma20,
+                            borderColor: '#f59e0b',
+                            borderWidth: 1.5,
+                            borderDash: [5, 5],
+                            tension: 0.1,
+                            pointRadius: 0
+                        },
+                        {
+                            label: '布林下軌',
+                            data: sig.chart_lbb,
+                            borderColor: '#ef4444',
+                            borderWidth: 1.5,
+                            borderDash: [2, 2],
+                            tension: 0.1,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0' } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10 }, grid: { color: '#334155' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+        }
+
+        if (signalsData.length > 0) {
+            setTimeout(() => loadChart(signalsData[0].ticker), 100);
+        }
+    </script>
+</body>
+</html>
