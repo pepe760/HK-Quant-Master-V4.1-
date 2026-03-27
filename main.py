@@ -216,7 +216,7 @@ html_content = f"""
                 <div class="overflow-y-auto max-h-[600px] space-y-4 pr-2">
 """
 if not signals:
-    html_content += `<div class="card p-6 text-center text-slate-500"><p class="text-4xl mb-2">☕</p><p>今日無訊號。</p></div>`
+    html_content += """<div class="card p-6 text-center text-slate-500"><p class="text-4xl mb-2">☕</p><p>今日無訊號。</p></div>"""
 else:
     for sig in signals:
         badge = "text-green-400 border-green-700 bg-green-900/30" if "海龜" in sig['type'] else "text-red-400 border-red-700 bg-red-900/30"
