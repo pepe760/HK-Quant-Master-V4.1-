@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # 👈 這裡升級到 v4，解決 Node.js 警告
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5 # 👈 這裡升級到 v5，解決 Node.js 警告
         with:
           python-version: '3.10'
 
@@ -33,6 +33,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m "Automated daily update" || echo "No changes to commit"
+          git add index.html
+          git commit -m "Automated daily update of dashboard" || echo "No changes to commit"
           git push origin main
