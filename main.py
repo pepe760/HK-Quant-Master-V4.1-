@@ -11,7 +11,6 @@ warnings.filterwarnings('ignore')
 # ==============================================================================
 # 1. 設定觀察名單與參數
 # ==============================================================================
-# 核心港股觀察清單 (全範圍雷達)
 WATCHLIST = [
     '0001.HK', '0002.HK', '0003.HK', '0005.HK', '0006.HK', '0011.HK', '0012.HK', '0016.HK', '0017.HK', '0020.HK',
     '0027.HK', '0066.HK', '0083.HK', '0101.HK', '0119.HK', '0135.HK', '0144.HK', '0151.HK', '0168.HK', '0175.HK',
@@ -36,512 +35,276 @@ WATCHLIST = [
 ]
 
 PORTFOLIO_FILE = 'portfolio.json'
-TRADE_SIZE = 10000.0  # 每次訊號固定投入 1 萬港幣 (無現金上限限制)
+TRADE_SIZE = 10000.0  
 today_str = datetime.datetime.now().strftime('%Y-%m-%d')
 today_time_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
-print("⏳ 1/5 正在下載最新市場數據 (包含歷史配息)...")
-hsi_df = yf.download("2800.HK", period="1y", progress=False, threads=False)
-if hsi_df.empty:
-    hsi_df = yf.download("^HSI", period="1y", progress=False, threads=False)
-
+print("⏳ 1/5 正在下載市場數據與股息歷史...")
+hsi_df = yf.download("2800.HK", period="1y", progress=False)
+if hsi_df.empty: hsi_df = yf.download("^HSI", period="1y", progress=False)
 hsi_c = hsi_df['Close'].iloc[:, 0].ffill() if isinstance(hsi_df.columns, pd.MultiIndex) else hsi_df['Close'].ffill()
 
-data = yf.download(WATCHLIST, period="1y", progress=False, threads=True, actions=True)
+data = yf.download(WATCHLIST, period="1y", progress=False, actions=True)
 if isinstance(data.columns, pd.MultiIndex):
-    closes = data.xs('Close', level=1, axis=1).ffill() if 'Close' not in data.columns.get_level_values(0) else data['Close'].ffill()
-    highs = data.xs('High', level=1, axis=1).ffill() if 'High' not in data.columns.get_level_values(0) else data['High'].ffill()
-    lows = data.xs('Low', level=1, axis=1).ffill() if 'Low' not in data.columns.get_level_values(0) else data['Low'].ffill()
-    vols = data.xs('Volume', level=1, axis=1).ffill() if 'Volume' not in data.columns.get_level_values(0) else data['Volume'].ffill()
-    
-    if 'Dividends' in data.columns.get_level_values(0):
-        divs = data['Dividends'].fillna(0)
-    elif 'Dividends' in data.columns.get_level_values(1):
-        divs = data.xs('Dividends', level=1, axis=1).fillna(0)
-    else:
-        divs = pd.DataFrame(columns=WATCHLIST)
+    closes = data.xs('Close', level=1, axis=1).ffill()
+    highs = data.xs('High', level=1, axis=1).ffill()
+    lows = data.xs('Low', level=1, axis=1).ffill()
+    vols = data.xs('Volume', level=1, axis=1).ffill()
+    divs = data.xs('Dividends', level=1, axis=1).fillna(0) if 'Dividends' in data.columns.get_level_values(1) else data['Dividends'].fillna(0)
 else:
     closes, highs, lows, vols = data[['Close']].ffill(), data[['High']].ffill(), data[['Low']].ffill(), data[['Volume']].ffill()
-    divs = data[['Dividends']].fillna(0) if 'Dividends' in data.columns else pd.DataFrame(columns=WATCHLIST)
+    divs = data[['Dividends']].fillna(0) if 'Dividends' in data.columns else pd.DataFrame(0, index=closes.index, columns=WATCHLIST)
 
-print("⏳ 2/5 計算技術指標與大盤狀態...")
+print("⏳ 2/5 技術指標計算...")
 hsi_200ma = hsi_c.rolling(200).mean()
-current_hsi_price, current_hsi_200ma = hsi_c.iloc[-1], hsi_200ma.iloc[-1]
-is_bull_market = current_hsi_price > current_hsi_200ma
-
-market_status = "🟢 牛市狀態 (大盤 > 200MA)" if is_bull_market else "🔴 熊市/震盪狀態 (大盤 < 200MA)"
-active_strategy = "Donchian Turtle (海龜20日突破)" if is_bull_market else "Mean Reversion (RSI超賣抄底)"
+is_bull_market = hsi_c.iloc[-1] > hsi_200ma.iloc[-1]
+market_status = "🟢 牛市狀態" if is_bull_market else "🔴 熊市/震盪狀態"
+active_strategy = "海龜突破" if is_bull_market else "RSI抄底"
 
 delta = closes.diff()
-gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-rs = gain / loss.replace(0, np.nan)
-rsi = 100 - (100 / (1 + rs))
-
-sma20 = closes.rolling(20).mean()
-std20 = closes.rolling(20).std()
+gain = (delta.where(delta > 0, 0)).rolling(14).mean()
+loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
+rsi = 100 - (100 / (1 + (gain / loss.replace(0, np.nan))))
+sma20, std20 = closes.rolling(20).mean(), closes.rolling(20).std()
 lower_bb = sma20 - (2 * std20)
 donchian_high = highs.rolling(20).max().shift(1)
 avg_vol_20 = vols.rolling(20).mean()
 
 # ==============================================================================
-# 3. 虛擬實盤帳戶管理 (V7.0 升級：無限資金策略績效追蹤)
+# 3. 虛擬實盤帳戶管理 (V7.1: 修復欄位並更新利潤)
 # ==============================================================================
-print("⏳ 3/5 載入並更新虛擬實盤帳戶...")
+print("⏳ 3/5 更新帳戶資產...")
 if os.path.exists(PORTFOLIO_FILE):
     with open(PORTFOLIO_FILE, 'r', encoding='utf-8') as f:
         portfolio = json.load(f)
-        # 相容舊版資料結構，確保新欄位存在
-        if 'realized_pnl' not in portfolio: portfolio['realized_pnl'] = 0.0
-        if 'winning_trades' not in portfolio: portfolio['winning_trades'] = 0
-        if 'total_trades' not in portfolio: portfolio['total_trades'] = 0
+    for k in ['realized_pnl', 'winning_trades', 'total_trades']:
+        if k not in portfolio: portfolio[k] = 0.0
 else:
-    # 移除 cash，改為追蹤累積利潤與勝率
     portfolio = {"realized_pnl": 0.0, "winning_trades": 0, "total_trades": 0, "open_positions": [], "closed_trades": [], "equity_curve": []}
 
 remaining_positions = []
+unrealized_pnl, active_invested = 0.0, 0.0
+
 for pos in portfolio['open_positions']:
-    ticker = pos['ticker']
-    if ticker not in closes.columns:
-        remaining_positions.append(pos)
-        continue
-    
-    cur_c, cur_h, cur_l = closes[ticker].iloc[-1], highs[ticker].iloc[-1], lows[ticker].iloc[-1]
-    days_held = (datetime.datetime.strptime(today_str, "%Y-%m-%d") - datetime.datetime.strptime(pos['entry_date'], "%Y-%m-%d")).days
+    t = pos['ticker']
+    if t not in closes.columns: continue
+    cur_c, cur_h, cur_l = closes[t].iloc[-1], highs[t].iloc[-1], lows[t].iloc[-1]
     
     exit_price, exit_reason = None, ""
+    if cur_l <= pos['sl']: exit_price, exit_reason = pos['sl'], "🔴 止損"
+    elif cur_h >= pos['tp']: exit_price, exit_reason = pos['tp'], "🟢 止盈"
     
-    if cur_l <= pos['sl']:
-        exit_price, exit_reason = pos['sl'], "🔴 觸發止損"
-    elif cur_h >= pos['tp']:
-        exit_price, exit_reason = pos['tp'], "🟢 觸發止盈"
-    elif days_held >= 30:
-        exit_price, exit_reason = cur_c, "⏱️ 30日強制平倉"
-        
     if exit_price:
-        pnl = (exit_price - pos['entry_price']) * pos['shares']
-        portfolio['realized_pnl'] += pnl
+        p = (exit_price - pos['entry_price']) * pos['shares']
+        portfolio['realized_pnl'] += p
         portfolio['total_trades'] += 1
-        if pnl > 0: portfolio['winning_trades'] += 1
-        
-        portfolio['closed_trades'].append({
-            "ticker": ticker, "entry_date": pos['entry_date'], "exit_date": today_str,
-            "entry_price": pos['entry_price'], "exit_price": round(exit_price, 2),
-            "pnl": round(pnl, 2), "reason": exit_reason
-        })
+        if p > 0: portfolio['winning_trades'] += 1
+        portfolio['closed_trades'].append({"ticker": t, "pnl": round(p, 2), "reason": exit_reason, "entry_date": pos['entry_date'], "exit_date": today_str})
     else:
+        unrealized_pnl += (cur_c - pos['entry_price']) * pos['shares']
+        active_invested += pos['entry_price'] * pos['shares']
         remaining_positions.append(pos)
-
 portfolio['open_positions'] = remaining_positions
 
-print("⏳ 4/5 掃描訊號、抓取基本面護城河...")
+print("⏳ 4/5 掃描訊號與強化版數據抓取...")
 signals = []
-open_tickers = [p['ticker'] for p in portfolio['open_positions']]
-
-def safe_list(series):
-    return [None if pd.isna(x) else round(float(x), 2) for x in series.tolist()]
-
 session = requests.Session()
-session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'})
-
-unrealized_pnl = 0.0
-active_invested = 0.0
+session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0'})
 
 for ticker in closes.columns:
-    if ticker not in WATCHLIST: continue
     cur_c = closes[ticker].iloc[-1]
     if pd.isna(cur_c): continue
 
-    recent_c, recent_rsi, recent_lbb, recent_dh = closes[ticker].tail(5), rsi[ticker].tail(5), lower_bb[ticker].tail(5), donchian_high[ticker].tail(5)
-    trigger_type, trigger_days, sl_price, tp_price = None, 0, 0.0, 0.0
-    
-    if is_bull_market:
-        is_triggered = recent_c > recent_dh
-        if is_triggered.iloc[-1]:
-            trigger_type, sl_price, tp_price = "海龜突破", cur_c * 0.90, cur_c * 1.30
-            for val in reversed(is_triggered.values):
-                if val: trigger_days += 1
-                else: break
-    else:
-        is_triggered = (recent_rsi < 30) & (recent_c < recent_lbb)
-        if is_triggered.iloc[-1]:
-            trigger_type, sl_price, tp_price = "RSI抄底", cur_c * 0.88, cur_c * 1.20
-            for val in reversed(is_triggered.values):
-                if val: trigger_days += 1
-                else: break
+    # 訊號判斷
+    trigger = False
+    if is_bull_market and (cur_c > donchian_high[ticker].iloc[-1]): trigger = "海龜突破"
+    elif not is_bull_market and (rsi[ticker].iloc[-1] < 30 and cur_c < lower_bb[ticker].iloc[-1]): trigger = "RSI抄底"
 
-    # 計算基本面 (不論有無觸發訊號，只要在持倉中或觸發訊號都會算)
-    need_fundamental = trigger_type is not None or ticker in open_tickers
-    
-    div_yield_pct = 0.0
-    earn_label = "無資料"
-    
-    if need_fundamental:
-        if ticker in divs.columns:
-            annual_div = divs[ticker].sum()
-            if cur_c > 0: div_yield_pct = round((annual_div / cur_c) * 100, 2)
-                
+    # 如果是持倉股或有訊號，才抓取基本面
+    is_holding = any(p['ticker'] == ticker for p in portfolio['open_positions'])
+    if trigger or is_holding:
+        div_yield = round((divs[ticker].tail(252).sum() / cur_c) * 100, 2) if cur_c > 0 else 0
+        earn_info = "未公佈"
         try:
-            tk_info = yf.Ticker(ticker, session=session).info
-            earn_growth = tk_info.get('earningsGrowth') or tk_info.get('revenueGrowth') or 0
-            earn_growth_pct = round(earn_growth * 100, 2)
-            if earn_growth_pct >= 15: earn_label = f"強勁成長 (+{earn_growth_pct}%)"
-            elif earn_growth_pct > 0: earn_label = f"溫和復甦 (+{earn_growth_pct}%)"
-            elif earn_growth_pct < 0: earn_label = f"衰退中 ({earn_growth_pct}%)"
-            else: earn_label = "未公佈"
-        except:
-            pass
-            
-        # 修復舊版 portfolio.json 裡面缺失的基本面數據！
-        for pos in portfolio['open_positions']:
-            if pos['ticker'] == ticker:
-                pos['div_yield'] = div_yield_pct
-                pos['earn_label'] = earn_label
-                unrealized_pnl += (cur_c - pos['entry_price']) * pos['shares']
-                active_invested += pos['entry_price'] * pos['shares']
+            # 強化版抓取：直接嘗試計算利潤成長
+            t_obj = yf.Ticker(ticker, session=session)
+            fin = t_obj.financials
+            if not fin.empty and 'Net Income' in fin.index:
+                growth = (fin.loc['Net Income'].iloc[0] / fin.loc['Net Income'].iloc[1]) - 1
+                earn_info = f"年度增長 ({growth*100:+.1f}%)"
+            else:
+                # 備援：抓取 info
+                info = t_obj.info
+                eg = info.get('earningsGrowth') or info.get('revenueGrowth') or 0
+                if eg != 0: earn_info = f"預期成長 ({eg*100:+.1f}%)"
+        except: pass
 
-    if trigger_type:
-        cur_h52 = highs[ticker].max() 
-        drawdown_52w = ((cur_c - cur_h52) / cur_h52) * 100 if cur_h52 > 0 else 0
-        cur_vol = avg_vol_20[ticker].iloc[-1]
-        daily_turnover_est = (cur_vol * cur_c) / 1000000 
-        
-        tv_ticker = f"HKEX:{int(ticker.split('.')[0])}" if ticker.split('.')[0].isdigit() else ticker
-
-        signals.append({
-            "ticker": ticker, "tv_ticker": tv_ticker, "price": round(cur_c, 2), 
-            "type": trigger_type, "sl": round(sl_price, 2), "tp": round(tp_price, 2), 
-            "rsi": round(recent_rsi.iloc[-1], 1), "trigger_days": trigger_days,
-            "dd_52w": round(drawdown_52w, 1), "turnover_m": round(daily_turnover_est, 1),
-            "div_yield": div_yield_pct, "earn_label": earn_label,
-            "chart_dates": closes.index[-100:].strftime('%m-%d').tolist(),
-            "chart_prices": safe_list(closes[ticker].tail(100)),
-            "chart_sma20": safe_list(sma20[ticker].tail(100)),
-            "chart_lbb": safe_list(lower_bb[ticker].tail(100))
-        })
-        
-        # 不受現金限制，只要出現訊號就買入 10000 港幣追蹤績效！
-        if ticker not in open_tickers:
-            shares = TRADE_SIZE / cur_c
-            portfolio['open_positions'].append({
-                "ticker": ticker, "entry_date": today_str, "entry_price": round(cur_c, 2),
-                "shares": shares, "sl": round(sl_price, 2), "tp": round(tp_price, 2), "type": trigger_type,
-                "div_yield": div_yield_pct, "earn_label": earn_label
+        if trigger:
+            sl, tp = (cur_c*0.9, cur_c*1.3) if is_bull_market else (cur_c*0.88, cur_c*1.2)
+            signals.append({
+                "ticker": ticker, "price": round(cur_c, 2), "type": trigger, "sl": round(sl, 2), "tp": round(tp, 2),
+                "rsi": round(rsi[ticker].iloc[-1], 1), "div_yield": div_yield, "earn_label": earn_info,
+                "chart_dates": closes.index[-100:].strftime('%m-%d').tolist(), "chart_prices": closes[ticker].tail(100).round(2).tolist(),
+                "chart_sma20": sma20[ticker].tail(100).round(2).tolist(), "chart_lbb": lower_bb[ticker].tail(100).round(2).tolist(),
+                "tv_ticker": f"HKEX:{int(ticker.split('.')[0])}"
             })
-            # 剛買入的也算進去動用資金
-            active_invested += shares * cur_c
+            if not is_holding:
+                portfolio['open_positions'].append({"ticker": ticker, "entry_price": round(cur_c, 2), "shares": TRADE_SIZE/cur_c, "sl": round(sl, 2), "tp": round(tp, 2), "entry_date": today_str, "div_yield": div_yield, "earn_label": earn_info})
 
-# 總淨利 = 歷史已實現利潤 + 目前未實現利潤
+        # 同步更新持倉中的基本面
+        for p in portfolio['open_positions']:
+            if p['ticker'] == ticker:
+                p['div_yield'], p['earn_label'] = div_yield, earn_info
+
 total_net_profit = portfolio['realized_pnl'] + unrealized_pnl
+portfolio['equity_curve'].append({"date": today_str, "equity": round(total_net_profit, 2)})
+with open(PORTFOLIO_FILE, 'w', encoding='utf-8') as f: json.dump(portfolio, f, indent=4)
 
-if len(portfolio['equity_curve']) > 0 and portfolio['equity_curve'][-1]['date'] == today_str:
-    portfolio['equity_curve'][-1]['equity'] = round(total_net_profit, 2)
-else:
-    portfolio['equity_curve'].append({"date": today_str, "equity": round(total_net_profit, 2)})
-
-with open(PORTFOLIO_FILE, 'w', encoding='utf-8') as f:
-    json.dump(portfolio, f, indent=4)
-
-print("⏳ 5/5 正在生成 HTML Dashboard...")
-
-eq_dates = [e['date'][5:] for e in portfolio['equity_curve']]
-eq_values = [e['equity'] for e in portfolio['equity_curve']]
-
-# 勝率計算
-win_rate = (portfolio['winning_trades'] / portfolio['total_trades'] * 100) if portfolio['total_trades'] > 0 else 0.0
-
+# ==============================================================================
+# 5. 生成 HTML
+# ==============================================================================
+win_rate = (portfolio['winning_trades'] / portfolio['total_trades'] * 100) if portfolio['total_trades'] > 0 else 0
 html_content = f"""
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>HK Quant Master V7.0 - 策略追蹤版</title>
+    <title>HK Quant Master V7.1</title>
     <style>
-        body {{ background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }}
+        body {{ background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; }}
         .card {{ background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; }}
-        .bull-text {{ color: #10b981; }} .bear-text {{ color: #ef4444; }}
         table {{ width: 100%; border-collapse: collapse; }}
-        th, td {{ padding: 12px 15px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }}
-        th {{ background-color: #0f172a; color: #94a3b8; font-size: 12px; text-transform: uppercase; }}
-        tr:hover {{ background-color: #334155; }}
-        .tab-btn {{ padding: 10px 20px; font-weight: bold; color: #94a3b8; border-bottom: 2px solid transparent; cursor: pointer; transition: 0.3s; }}
-        .tab-btn:hover {{ color: #e2e8f0; }}
-        .tab-active {{ color: #3b82f6; border-bottom: 2px solid #3b82f6; }}
-        .tab-content {{ display: none; }}
-        .content-active {{ display: block; }}
-        .info-badge {{ font-size: 0.75rem; padding: 4px 6px; border-radius: 6px; background: rgba(30, 41, 59, 0.8); border: 1px solid #475569; text-align: center; }}
+        th, td {{ padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }}
+        .tab-btn {{ padding: 10px 20px; color: #94a3b8; cursor: pointer; border-bottom: 2px solid transparent; }}
+        .tab-active {{ color: #3b82f6; border-bottom: 2px solid #3b82f6; font-weight: bold; }}
+        .tab-content {{ display: none; }} .active {{ display: block; }}
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4">
     <div class="max-w-7xl mx-auto space-y-6">
-        <div class="card p-6 flex flex-col md:flex-row justify-between items-center shadow-lg border-b-4 border-blue-500">
+        <div class="card p-6 flex justify-between items-center border-b-4 border-blue-500">
             <div>
-                <h1 class="text-3xl font-black text-white mb-2">HK Quant Master V7.0 <span class="text-blue-500">策略績效追蹤版</span></h1>
-                <p class="text-slate-400 text-sm">解鎖資金限制，全自動驗證勝率與利潤 | 更新時間：{today_time_str}</p>
+                <h1 class="text-2xl font-bold">HK Quant Master V7.1 <span class="text-blue-400">數據強化版</span></h1>
+                <p class="text-sm text-slate-400">更新：{today_time_str} | 大盤：{market_status}</p>
             </div>
-            <div class="mt-4 md:mt-0 text-right bg-slate-900 p-4 rounded-lg border border-slate-700">
-                <p class="text-xs text-slate-400 mb-1">大盤狀態 ({hsi_c.iloc[-1]:.2f} vs 200MA {hsi_200ma.iloc[-1]:.2f})</p>
-                <div class="text-xl font-bold {'bull-text' if is_bull_market else 'bear-text'}">{market_status}</div>
-                <div class="text-sm mt-1 text-slate-300">啟動引擎：<span class="font-bold text-yellow-400">{active_strategy}</span></div>
+            <div class="text-right">
+                <div class="text-lg font-bold text-yellow-400">策略：{active_strategy}</div>
             </div>
         </div>
 
-        <div class="flex space-x-2 border-b border-slate-700">
-            <button class="tab-btn tab-active" onclick="switchTab('tab-scanner', this)">🎯 今日訊號與圖表</button>
-            <button class="tab-btn" onclick="switchTab('tab-portfolio', this)">📈 策略長期績效驗證</button>
-            <button class="tab-btn" onclick="switchTab('tab-manual', this)">📖 系統使用說明書</button>
+        <div class="flex space-x-4 border-b border-slate-700">
+            <div id="btn-scan" class="tab-btn tab-active" onclick="showTab('scan')">🎯 今日訊號</div>
+            <div id="btn-port" class="tab-btn" onclick="showTab('port')">📈 績效驗證</div>
+            <div id="btn-man" class="tab-btn" onclick="showTab('man')">📖 使用說明</div>
         </div>
 
-        <div id="tab-scanner" class="tab-content content-active">
+        <div id="tab-scan" class="tab-content active">
             <div class="flex flex-col lg:flex-row gap-6">
-                <div class="lg:w-2/5 flex flex-col gap-4 overflow-y-auto max-h-[750px] pr-2">
-                    <h2 class="text-xl font-bold border-b border-slate-700 pb-2">🎯 今日觸發標的 ({len(signals)})</h2>
+                <div class="lg:w-1/3 space-y-4 max-h-[700px] overflow-y-auto">
 """
 if not signals:
-    html_content += """<div class="card p-6 text-center text-slate-500"><p class="text-4xl mb-2">☕</p><p>今日無訊號。</p></div>"""
+    html_content += '<div class="card p-10 text-center text-slate-500">☕ 今日無符合訊號</div>'
 else:
-    for sig in signals:
-        badge = "bg-green-900/50 text-green-400 border-green-700" if "海龜" in sig['type'] else "bg-red-900/50 text-red-400 border-red-700"
-        div_color = "text-green-400 font-black" if sig['div_yield'] >= 6 else "text-slate-300"
-        earn_color = "text-green-400" if "+" in sig['earn_label'] else "text-red-400" if "衰退" in sig['earn_label'] else "text-slate-400"
-        
+    for s in signals:
+        dy_c = "text-green-400" if s['div_yield'] >= 6 else "text-slate-300"
         html_content += f"""
-                    <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow border-l-4 border-blue-500" onclick="loadStockChart('{sig['ticker']}', '{sig['div_yield']}', '{sig['earn_label']}')">
-                        <div class="flex justify-between items-center mb-2">
-                            <div class="text-2xl font-black text-white">{sig['ticker']}</div>
-                            <div class="text-xs px-2 py-1 rounded border {badge}">{sig['type']}</div>
+                    <div class="card p-4 cursor-pointer hover:bg-slate-700 border-l-4 border-blue-500" onclick="updateChart('{s['ticker']}', '{s['div_yield']}', '{s['earn_label']}', '{s['tv_ticker']}')">
+                        <div class="flex justify-between font-bold"><span>{s['ticker']}</span><span class="text-blue-400">${s['price']}</span></div>
+                        <div class="grid grid-cols-2 text-xs mt-2 gap-2">
+                            <div class="bg-slate-800 p-2 rounded text-center">股息: <span class="{dy_c}">{s['div_yield']}%</span></div>
+                            <div class="bg-slate-800 p-2 rounded text-center">RSI: {s['rsi']}</div>
                         </div>
-                        
-                        <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
-                            <div class="info-badge">
-                                <span class="text-slate-400 block mb-1">股息殖利率</span>
-                                <span class="{div_color}">{sig['div_yield']}%</span>
-                            </div>
-                            <div class="info-badge">
-                                <span class="text-slate-400 block mb-1">近期業績</span>
-                                <span class="{earn_color} font-bold">{sig['earn_label']}</span>
-                            </div>
-                            <div class="info-badge">
-                                <span class="text-slate-400 block mb-1">52週回撤</span>
-                                <span class="text-slate-300">{sig['dd_52w']}%</span>
-                            </div>
-                            <div class="info-badge">
-                                <span class="text-slate-400 block mb-1">現價/RSI</span>
-                                <span class="text-white">${sig['price']} (RSI:{sig['rsi']})</span>
-                            </div>
-                        </div>
-                    </div>
-"""
+                    </div>"""
+
 html_content += f"""
                 </div>
-
-                <div class="lg:w-3/5">
-                    <div class="card p-4 mb-4 bg-slate-800 flex justify-between items-center border-l-4 border-indigo-500">
-                        <div>
-                            <h3 id="stock_chart_title" class="text-xl font-bold text-white">點擊左側股票載入圖表</h3>
-                            <p id="stock_chart_subtitle" class="text-xs text-slate-400 mt-1">藍線: 收盤價 | 橘虛線: 20MA | 紅虛線: 布林下軌</p>
-                        </div>
-                        <a id="tv_link" href="#" target="_blank" class="hidden bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 px-4 rounded transition shadow">
-                            📊 在 TradingView 開啟
-                        </a>
+                <div class="lg:w-2/3 space-y-4">
+                    <div class="card p-4 bg-slate-800 flex justify-between items-center">
+                        <h3 id="c_title" class="font-bold">點擊左側查看 K 線圖</h3>
+                        <a id="tv_btn" href="#" target="_blank" class="hidden bg-blue-600 px-3 py-1 rounded text-xs">TradingView</a>
                     </div>
-                    <div class="card p-4 h-[500px] flex items-center justify-center relative shadow-inner bg-slate-900">
-                        <p id="chart_placeholder" class="text-slate-500 absolute z-0">個股圖表顯示區 (近100日走勢)</p>
-                        <canvas id="stockChart" class="w-full h-full relative z-10 hidden"></canvas>
-                    </div>
+                    <div class="card p-4 h-[500px] bg-slate-900"><canvas id="sChart"></canvas></div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-portfolio" class="tab-content space-y-6">
-            <div class="card p-6 bg-gradient-to-br from-slate-800 to-slate-900">
-                <h2 class="text-xl font-bold border-b border-slate-700 pb-2 mb-4">📈 策略長期績效驗證 (Signal Net Profit Tracker)</h2>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-slate-900 p-4 rounded text-center border border-slate-700">
-                        <p class="text-xs text-slate-400">系統累計淨利潤 (Net PnL)</p>
-                        <p class="text-2xl font-black {'text-green-400' if total_net_profit >= 0 else 'text-red-400'}">${total_net_profit:,.2f}</p>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded text-center border border-slate-700">
-                        <p class="text-xs text-slate-400">目前動用資金 (Active Deployed)</p>
-                        <p class="text-xl font-bold text-blue-400">${active_invested:,.2f}</p>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded text-center border border-slate-700">
-                        <p class="text-xs text-slate-400">系統歷史勝率 (Win Rate)</p>
-                        <p class="text-xl font-bold text-yellow-400">{win_rate:.1f}%</p>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded text-center border border-slate-700">
-                        <p class="text-xs text-slate-400">目前持倉 / 歷史平倉</p>
-                        <p class="text-xl font-bold text-white">{len(portfolio['open_positions'])} 檔 / {portfolio['total_trades']} 筆</p>
-                    </div>
-                </div>
-                <div class="h-[250px] w-full"><canvas id="equityChart"></canvas></div>
+        <div id="tab-port" class="tab-content">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+                <div class="card p-4"><p class="text-xs text-slate-400">累計利潤</p><p class="text-xl font-bold {'text-green-400' if total_net_profit >= 0 else 'text-red-400'}">${total_net_profit:,.0f}</p></div>
+                <div class="card p-4"><p class="text-xs text-slate-400">目前動用</p><p class="text-xl font-bold">${active_invested:,.0f}</p></div>
+                <div class="card p-4"><p class="text-xs text-slate-400">歷史勝率</p><p class="text-xl font-bold text-yellow-400">{win_rate:.1f}%</p></div>
+                <div class="card p-4"><p class="text-xs text-slate-400">持倉檔數</p><p class="text-xl font-bold">{len(portfolio['open_positions'])}</p></div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="card">
-                    <div class="bg-slate-800 p-3 font-bold border-b border-slate-700">💼 策略當前追蹤清單 (每檔固定投入 1 萬)</div>
-                    <div class="overflow-x-auto max-h-[350px] overflow-y-auto">
-                        <table>
-                            <tr><th>代碼</th><th>買入價</th><th>現價</th><th>損益(%)</th><th>殖利率</th><th>業績</th></tr>
+            <div class="card p-4 h-[300px] mb-6"><canvas id="eChart"></canvas></div>
+            <div class="card">
+                <div class="p-3 bg-slate-800 font-bold text-sm">💼 當前追蹤庫存 (每檔 1 萬)</div>
+                <div class="overflow-x-auto">
+                    <table>
+                        <tr><th>代碼</th><th>成本</th><th>現價</th><th>損益</th><th>股息</th><th>業績</th></tr>
 """
-for pos in reversed(portfolio['open_positions']):
-    cur_px = closes[pos['ticker']].iloc[-1] if pos['ticker'] in closes.columns else pos['entry_price']
-    pnl_pct = (cur_px / pos['entry_price'] - 1) * 100
-    color = "text-green-400" if pnl_pct > 0 else "text-red-400"
-    dy = pos.get('div_yield', 0.0)
-    el = pos.get('earn_label', '無資料')
-    dy_color = "text-green-400 font-bold" if dy >= 6 else "text-slate-400"
-    html_content += f"<tr><td class='font-bold text-blue-400'>{pos['ticker']}</td><td>${pos['entry_price']}</td><td>${cur_px:.2f}</td><td class='font-bold {color}'>{pnl_pct:+.2f}%</td><td class='{dy_color}'>{dy}%</td><td class='text-xs text-slate-400'>{el}</td></tr>"
+for p in reversed(portfolio['open_positions']):
+    cur_p = closes[p['ticker']].iloc[-1]
+    diff = (cur_p / p['entry_price'] - 1) * 100
+    html_content += f"<tr><td class='font-bold text-blue-400'>{p['ticker']}</td><td>${p['entry_price']}</td><td>${cur_p:.2f}</td><td class='{'text-green-400' if diff>0 else 'text-red-400'}'>{diff:+.2f}%</td><td>{p.get('div_yield',0)}%</td><td class='text-xs'>{p.get('earn_label','-')}</td></tr>"
+html_content += """</table></div></div></div>
 
-if not portfolio['open_positions']: html_content += "<tr><td colspan='6' class='text-center text-slate-500'>目前無持倉追蹤</td></tr>"
-
-html_content += f"""
-                        </table>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="bg-slate-800 p-3 font-bold border-b border-slate-700">📜 歷史平倉 (Closed Trades)</div>
-                    <div class="overflow-x-auto max-h-[350px] overflow-y-auto">
-                        <table>
-                            <tr><th>代碼</th><th>損益($)</th><th>原因</th></tr>
-"""
-for pos in reversed(portfolio['closed_trades'][-20:]):
-    color = "text-green-400" if pos['pnl'] > 0 else "text-red-400"
-    html_content += f"<tr><td class='font-bold'>{pos['ticker']}</td><td class='font-bold {color}'>${pos['pnl']}</td><td class='text-xs'>{pos['reason']}</td></tr>"
-if not portfolio['closed_trades']: html_content += "<tr><td colspan='3' class='text-center text-slate-500'>尚無平倉紀錄</td></tr>"
-
-html_content += f"""
-                        </table>
-                    </div>
-                </div>
-            </div>
+        <div id="tab-man" class="tab-content card p-8 space-y-4">
+            <h2 class="text-xl font-bold text-blue-400">系統使用說明</h2>
+            <p>1. <b>大盤過濾</b>：盈富基金高於 200MA 追強勢股，低於 200MA 抄底超賣股。</p>
+            <p>2. <b>護城河</b>：優先挑選「高股息(>6%)」且「業績增長」的標的，安全性更高。</p>
+            <p>3. <b>策略驗證</b>：採用無限資金模式，每筆固定 1 萬，以此觀察策略長期的累積利潤與勝率。</p>
         </div>
-
-        <div id="tab-manual" class="tab-content">
-            <div class="card p-8 space-y-6 text-slate-300">
-                <h2 class="text-2xl font-black text-white border-b border-slate-700 pb-2">📖 HK Quant Master 系統使用說明書</h2>
-                
-                <div>
-                    <h3 class="text-lg font-bold text-blue-400 mb-2">1. 系統大腦：狀態切換邏輯 (Regime Switching)</h3>
-                    <p class="mb-2">系統每天會掃描香港盈富基金 (2800.HK) 的價格與 200 日移動平均線 (200MA) 之間的關係：</p>
-                    <ul class="list-disc pl-6 space-y-1 text-sm">
-                        <li><b>🟢 牛市狀態 (大盤 > 200MA)</b>：啟動「海龜突破法」，專挑創下 20 日新高的強勢股，順勢追擊。</li>
-                        <li><b>🔴 熊市狀態 (大盤 < 200MA)</b>：關閉追高策略，啟動「RSI 超賣抄底法」，專門尋找被市場錯殺、跌穿布林通道下軌的股票進行低吸。</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold text-blue-400 mb-2">2. 基本面護城河 (The Moat)</h3>
-                    <p class="mb-2">為了防止買到「價值陷阱」，系統加入兩道防線：</p>
-                    <ul class="list-disc pl-6 space-y-1 text-sm">
-                        <li><span class="text-green-400 font-bold">高股息防護 (綠色顯示)</span>：殖利率 > 6% 時會以綠色高亮。高股息能為您提供強大的「下跌緩衝墊」，就算被套牢也能靠配息回血。</li>
-                        <li><span class="text-green-400 font-bold">業績動能確認</span>：如果一檔股票暴跌，但業績顯示「強勁成長 (+)」，這就是黃金坑。若顯示「衰退中 (-)」，代表下跌有合理原因，反彈即走，不可長抱。</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold text-blue-400 mb-2">3. 無限資金策略追蹤 (Strategy Tracker)</h3>
-                    <p class="mb-2">為了不受現金限制影響測試結果，本系統採用「無限資金池」模式來驗證策略長期勝率：</p>
-                    <ul class="list-disc pl-6 space-y-1 text-sm">
-                        <li><b>無上限建倉</b>：只要出現符合條件的新訊號，系統就會動用虛擬資金 $10,000 港幣買入，記錄為一筆策略測試。</li>
-                        <li><b>淨利潤與勝率</b>：系統會專注計算這套邏輯長期的「累計淨利潤」以及「平倉勝率」，這才是驗證量化模型的黃金標準。</li>
-                        <li><b>無情平倉</b>：跌穿「嚴格止損價(SL)」或突破「目標止盈價(TP)」，隔天自動結算。持倉滿 30 天強制平倉。</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        function switchTab(tabId, btnElement) {{
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('content-active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('tab-active'));
-            document.getElementById(tabId).classList.add('content-active');
-            btnElement.classList.add('tab-active');
+        function showTab(t) {{
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab-' + t).style.display = 'block';
+            document.getElementById('btn-' + t).classList.add('tab-active');
         }}
 
-        // 繪製「累計淨利潤曲線」
-        const ctxEq = document.getElementById('equityChart').getContext('2d');
-        new Chart(ctxEq, {{
-            type: 'line',
-            data: {{
-                labels: {json.dumps(eq_dates)},
-                datasets: [{{
-                    label: '累計淨利潤 (HKD)', data: {json.dumps(eq_values)},
-                    borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                    borderWidth: 3, fill: true, tension: 0.3, pointRadius: 2
-                }}]
-            }},
-            options: {{
-                responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }} }},
-                scales: {{
-                    x: {{ grid: {{ color: '#334155' }}, ticks: {{ color: '#94a3b8' }} }},
-                    y: {{ grid: {{ color: '#334155' }}, ticks: {{ color: '#94a3b8' }} }}
-                }}
-            }}
-        }});
+        const sigData = {json.dumps(signals)};
+        let sChart = null;
 
-        // 繪製個股圖表
-        const signalsData = {json.dumps(signals)};
-        let stockChart = null;
+        function updateChart(tk, dy, el, tv) {{
+            const s = sigData.find(x => x.ticker === tk);
+            document.getElementById('c_title').innerHTML = `${{tk}} <span class="text-xs text-slate-400 font-normal ml-2">股息:${{dy}}% | 業績:${{el}}</span>`;
+            const tvBtn = document.getElementById('tv_btn');
+            tvBtn.href = `https://www.tradingview.com/chart/?symbol=${{tv}}`;
+            tvBtn.classList.remove('hidden');
 
-        function loadStockChart(ticker, divYield, earnLabel) {{
-            const sig = signalsData.find(s => s.ticker === ticker);
-            if (!sig) return;
-
-            document.getElementById('chart_placeholder').classList.add('hidden');
-            const canvas = document.getElementById('stockChart');
-            canvas.classList.remove('hidden');
-            
-            // 將基本面資訊加到圖表標題！
-            const dyColor = parseFloat(divYield) >= 6 ? '<span class="text-green-400 font-bold">' : '<span class="text-slate-300">';
-            const elColor = earnLabel.includes('+') ? '<span class="text-green-400 font-bold">' : (earnLabel.includes('-') ? '<span class="text-red-400 font-bold">' : '<span class="text-slate-300">');
-            
-            document.getElementById('stock_chart_title').innerHTML = `${{ticker}} <span class="text-sm text-slate-400 font-normal ml-2"> (殖利率: ${{dyColor}}${{divYield}}%</span> | 業績: ${{elColor}}${{earnLabel}}</span>)`;
-
-            const tvLink = document.getElementById('tv_link');
-            tvLink.href = `https://www.tradingview.com/chart/?symbol=${{sig.tv_ticker}}`;
-            tvLink.classList.remove('hidden');
-
-            const ctxStock = canvas.getContext('2d');
-            if (stockChart) stockChart.destroy();
-
-            stockChart = new Chart(ctxStock, {{
+            const ctx = document.getElementById('sChart').getContext('2d');
+            if (sChart) sChart.destroy();
+            sChart = new Chart(ctx, {{
                 type: 'line',
                 data: {{
-                    labels: sig.chart_dates,
+                    labels: s.chart_dates,
                     datasets: [
-                        {{ label: '收盤價', data: sig.chart_prices, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, tension: 0.1 }},
-                        {{ label: '20日均線', data: sig.chart_sma20, borderColor: '#f59e0b', borderWidth: 1.5, borderDash: [5, 5], pointRadius: 0 }},
-                        {{ label: '布林下軌', data: sig.chart_lbb, borderColor: '#ef4444', borderWidth: 1.5, borderDash: [2, 2], pointRadius: 0 }}
+                        {{ label: '價格', data: s.chart_prices, borderColor: '#3b82f6', pointRadius: 0 }},
+                        {{ label: '20MA', data: s.chart_sma20, borderColor: '#f59e0b', borderDash: [5,5], pointRadius: 0 }},
+                        {{ label: '布林下', data: s.chart_lbb, borderColor: '#ef4444', borderDash: [2,2], pointRadius: 0 }}
                     ]
                 }},
-                options: {{
-                    responsive: true, maintainAspectRatio: false,
-                    interaction: {{ mode: 'index', intersect: false }},
-                    plugins: {{ legend: {{ labels: {{ color: '#e2e8f0' }} }} }},
-                    scales: {{
-                        x: {{ ticks: {{ color: '#94a3b8', maxTicksLimit: 10 }}, grid: {{ color: '#334155' }} }},
-                        y: {{ ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#334155' }} }}
-                    }}
-                }}
+                options: {{ responsive: true, maintainAspectRatio: false }}
             }});
         }}
 
-        if (signalsData.length > 0) {{
-            setTimeout(() => loadStockChart(signalsData[0].ticker, signalsData[0].div_yield, signalsData[0].earn_label), 100);
-        }}
+        new Chart(document.getElementById('eChart'), {{
+            type: 'line',
+            data: {{
+                labels: {json.dumps(eq_dates)},
+                datasets: [{{ label: '累計利潤', data: {json.dumps(eq_values)}, borderColor: '#10b981', fill: true }}]
+            }},
+            options: {{ responsive: true, maintainAspectRatio: false }}
+        }});
+
+        if (sigData.length > 0) updateChart(sigData[0].ticker, sigData[0].div_yield, sigData[0].earn_label, sigData[0].tv_ticker);
     </script>
 </body>
 </html>
 """
-
-with open("index.html", 'w', encoding='utf-8') as f:
-    f.write(html_content)
-
-print(f"🎉 成功！已生成 V7.0 無限追蹤版網頁 (index.html)")
+with open("index.html", 'w', encoding='utf-8') as f: f.write(html_content)
+print("✅ V7.1 生成完成")
