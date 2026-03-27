@@ -1,6 +1,88 @@
 {
-    "cash": 100000.0,
-    "open_positions": [],
+    "cash": 10141.360031604767,
+    "open_positions": [
+        {
+            "ticker": "0135.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 7.42,
+            "shares": 1347,
+            "sl": 6.53,
+            "tp": 8.9,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "0272.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 0.58,
+            "shares": 17241,
+            "sl": 0.51,
+            "tp": 0.7,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "0604.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 0.7,
+            "shares": 14285,
+            "sl": 0.62,
+            "tp": 0.84,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "0960.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 7.75,
+            "shares": 1290,
+            "sl": 6.82,
+            "tp": 9.3,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "1024.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 46.08,
+            "shares": 217,
+            "sl": 40.55,
+            "tp": 55.3,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "1339.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 5.43,
+            "shares": 1841,
+            "sl": 4.78,
+            "tp": 6.52,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "3319.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 1.71,
+            "shares": 5847,
+            "sl": 1.5,
+            "tp": 2.05,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "6690.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 21.88,
+            "shares": 457,
+            "sl": 19.25,
+            "tp": 26.26,
+            "type": "RSI\u6284\u5e95"
+        },
+        {
+            "ticker": "9992.HK",
+            "entry_date": "2026-03-27",
+            "entry_price": 149.6,
+            "shares": 66,
+            "sl": 131.65,
+            "tp": 179.52,
+            "type": "RSI\u6284\u5e95"
+        }
+    ],
     "closed_trades": [],
     "equity_curve": [
         {
