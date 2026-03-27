@@ -8,7 +8,9 @@
             "shares": 1347,
             "sl": 6.53,
             "tp": 8.9,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 4.58,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "0272.HK",
@@ -17,7 +19,9 @@
             "shares": 17241,
             "sl": 0.51,
             "tp": 0.7,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 6.21,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "0604.HK",
@@ -26,7 +30,9 @@
             "shares": 14285,
             "sl": 0.62,
             "tp": 0.84,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 0.0,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "0960.HK",
@@ -35,7 +41,9 @@
             "shares": 1290,
             "sl": 6.82,
             "tp": 9.3,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 2.44,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "1024.HK",
@@ -44,7 +52,9 @@
             "shares": 217,
             "sl": 40.55,
             "tp": 55.3,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 1.0,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "1339.HK",
@@ -53,7 +63,9 @@
             "shares": 1841,
             "sl": 4.78,
             "tp": 6.52,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 3.87,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "3319.HK",
@@ -62,7 +74,9 @@
             "shares": 5847,
             "sl": 1.5,
             "tp": 2.05,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 5.88,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "6690.HK",
@@ -71,7 +85,9 @@
             "shares": 457,
             "sl": 19.25,
             "tp": 26.26,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 6.15,
+            "earn_label": "\u7121\u8cc7\u6599"
         },
         {
             "ticker": "9992.HK",
@@ -80,14 +96,19 @@
             "shares": 66,
             "sl": 131.65,
             "tp": 179.52,
-            "type": "RSI\u6284\u5e95"
+            "type": "RSI\u6284\u5e95",
+            "div_yield": 0.59,
+            "earn_label": "\u7121\u8cc7\u6599"
         }
     ],
     "closed_trades": [],
     "equity_curve": [
         {
             "date": "2026-03-27",
-            "equity": 100000.0
+            "equity": -0.0
         }
-    ]
+    ],
+    "realized_pnl": 0.0,
+    "winning_trades": 0,
+    "total_trades": 0
 }
