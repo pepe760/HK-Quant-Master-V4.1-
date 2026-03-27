@@ -416,7 +416,7 @@ html_content += f"""
 </html>
 """
 
-filename = f"HK_Regime_Dashboard_V4_1_{datetime.datetime.now().strftime('%Y%m%d')}.html"
+filename = "index.html"  # 固定檔名，方便網頁伺服器讀取
 with open(filename, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
