@@ -20,7 +20,7 @@
         <div class="card p-6 mb-6 flex flex-col md:flex-row justify-between items-center shadow-lg border-b-4 border-blue-500">
             <div>
                 <h1 class="text-3xl font-black text-white mb-2">HK Quant Master V4.1 <span class="text-blue-500">技財雙重掃描器</span></h1>
-                <p class="text-slate-400 text-sm">技術面發掘買點，基本面鎖定底氣 | 最後更新：2026-07-09 11:27</p>
+                <p class="text-slate-400 text-sm">技術面發掘買點，基本面鎖定底氣 | 最後更新：2026-07-10 11:26</p>
             </div>
             <div class="mt-4 md:mt-0 text-right bg-slate-900 p-4 rounded-lg border border-slate-700">
                 <p class="text-xs text-slate-400 mb-1">自動判斷當前大盤狀態</p>
@@ -31,51 +31,11 @@
 
         <div class="flex flex-col lg:flex-row gap-6">
             <div class="lg:w-2/5 flex flex-col gap-4 overflow-y-auto max-h-[850px] pr-2">
-                <h2 class="text-xl font-bold border-b border-slate-700 pb-2 sticky top-0 bg-[#0f172a] z-10 pt-2">🎯 今日觸發標的 (1)</h2>
+                <h2 class="text-xl font-bold border-b border-slate-700 pb-2 sticky top-0 bg-[#0f172a] z-10 pt-2">🎯 今日觸發標的 (0)</h2>
 
-                <div class="card p-4 cursor-pointer hover:bg-slate-700 transition shadow" onclick="loadChart('0288.HK')">
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="text-2xl font-black text-white">0288.HK</div>
-                        <div class="text-xs px-2 py-1 rounded border bg-red-900/50 text-red-400 border-red-700">RSI 超跌抄底 (逆勢)</div>
-                    </div>
-                    
-                    <div class="text-xs font-bold text-slate-400 mb-3 border-b border-slate-700 pb-2">
-                        ⚡ 連續觸發 2 天 | RSI: 26.5
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-800 p-2 rounded">
-                        <div class="info-badge">
-                            <span class="text-slate-400 block mb-1">股息殖利率</span>
-                            <span class="text-green-400 font-black text-sm">7.78%</span>
-                        </div>
-                        <div class="info-badge">
-                            <span class="text-slate-400 block mb-1">近期業績動能</span>
-                            <span class="text-red-400 font-bold text-sm">衰退中 (-6.1%)</span>
-                        </div>
-                        <div class="info-badge">
-                            <span class="text-slate-400 block mb-1">52週回撤</span>
-                            <span class="text-slate-300 font-bold text-sm">-25.3%</span>
-                        </div>
-                        <div class="info-badge">
-                            <span class="text-slate-400 block mb-1">日成交額</span>
-                            <span class="text-slate-300 font-bold text-sm">333.9M</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-2 text-center bg-slate-900 p-2 rounded border border-slate-700">
-                        <div>
-                            <div class="text-[10px] text-slate-500">現價進場</div>
-                            <div class="font-bold text-white">$7.76</div>
-                        </div>
-                        <div>
-                            <div class="text-[10px] text-red-400">嚴格止損</div>
-                            <div class="font-bold text-red-400">$6.83</div>
-                        </div>
-                        <div>
-                            <div class="text-[10px] text-green-400">目標止盈</div>
-                            <div class="font-bold text-green-400">$9.31</div>
-                        </div>
-                    </div>
+                <div class="card p-6 text-center text-slate-500">
+                    <p class="text-4xl mb-2">☕</p>
+                    <p>今日無符合條件的標的。</p>
                 </div>
 
             </div>
@@ -111,7 +71,7 @@
     </div>
 
     <script>
-        const signalsData = [{"ticker": "0288.HK", "tv_ticker": "HKEX:288", "price": 7.76, "type": "RSI \u8d85\u8dcc\u6284\u5e95 (\u9006\u52e2)", "trigger_days": 2, "sl": 6.83, "tp": 9.31, "rsi": 26.5, "dd_52w": -25.3, "turnover_m": 333.9, "div_yield": 7.78, "earn_label": "\u8870\u9000\u4e2d (-6.1%)", "chart_dates": ["02-06", "02-09", "02-10", "02-11", "02-12", "02-13", "02-16", "02-20", "02-23", "02-24", "02-25", "02-26", "02-27", "03-02", "03-03", "03-04", "03-05", "03-06", "03-09", "03-10", "03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26", "03-27", "03-30", "03-31", "04-01", "04-02", "04-08", "04-09", "04-10", "04-13", "04-14", "04-15", "04-16", "04-17", "04-20", "04-21", "04-22", "04-23", "04-24", "04-27", "04-28", "04-29", "04-30", "05-04", "05-05", "05-06", "05-07", "05-08", "05-11", "05-12", "05-13", "05-14", "05-15", "05-18", "05-19", "05-20", "05-21", "05-22", "05-26", "05-27", "05-28", "05-29", "06-01", "06-02", "06-03", "06-04", "06-05", "06-08", "06-09", "06-10", "06-11", "06-12", "06-15", "06-16", "06-17", "06-18", "06-22", "06-23", "06-24", "06-25", "06-26", "06-29", "06-30", "07-02", "07-03", "07-06", "07-07", "07-08", "07-09"], "chart_prices": [9.04, 9.13, 9.29, 9.44, 9.39, 9.47, 9.47, 9.47, 9.53, 9.95, 9.63, 9.54, 9.43, 9.48, 9.47, 9.22, 9.19, 9.38, 9.1, 9.29, 9.32, 9.21, 9.1, 9.27, 9.17, 9.29, 9.09, 9.06, 8.76, 9.01, 9.66, 9.48, 9.87, 9.77, 9.83, 10.02, 10.18, 10.01, 10.0, 10.37, 10.22, 10.24, 10.19, 10.23, 10.1, 10.14, 10.37, 10.22, 10.16, 10.14, 10.15, 10.13, 9.54, 9.12, 9.2, 9.17, 9.42, 9.52, 9.39, 9.42, 9.34, 9.36, 9.39, 9.41, 9.35, 9.22, 9.29, 9.39, 9.19, 8.72, 8.81, 8.79, 9.05, 9.14, 9.1, 9.0, 8.9, 8.99, 8.97, 8.79, 8.75, 8.83, 8.82, 8.85, 8.9, 8.88, 8.57, 8.61, 8.59, 8.58, 8.44, 8.5, 8.49, 8.29, 8.54, 8.82, 8.5, 8.29, 7.84, 7.76], "chart_sma20": [8.59, 8.64, 8.69, 8.75, 8.81, 8.86, 8.92, 8.98, 9.04, 9.12, 9.18, 9.23, 9.26, 9.3, 9.32, 9.34, 9.37, 9.38, 9.38, 9.4, 9.41, 9.41, 9.4, 9.4, 9.39, 9.38, 9.36, 9.34, 9.3, 9.25, 9.25, 9.25, 9.27, 9.29, 9.3, 9.34, 9.39, 9.42, 9.47, 9.52, 9.57, 9.62, 9.68, 9.72, 9.77, 9.81, 9.88, 9.93, 10.0, 10.06, 10.09, 10.12, 10.1, 10.07, 10.04, 9.99, 9.96, 9.93, 9.9, 9.85, 9.81, 9.77, 9.73, 9.68, 9.65, 9.6, 9.55, 9.51, 9.46, 9.39, 9.32, 9.25, 9.23, 9.23, 9.22, 9.21, 9.19, 9.16, 9.14, 9.11, 9.08, 9.05, 9.03, 9.0, 8.98, 8.96, 8.92, 8.88, 8.85, 8.85, 8.83, 8.81, 8.78, 8.74, 8.71, 8.71, 8.69, 8.65, 8.59, 8.54], "chart_lbb": [7.95, 7.97, 7.99, 8.02, 8.06, 8.08, 8.14, 8.23, 8.32, 8.36, 8.46, 8.56, 8.62, 8.69, 8.73, 8.81, 8.89, 8.94, 8.95, 8.98, 9.03, 9.04, 9.01, 9.0, 8.97, 8.96, 8.93, 8.89, 8.79, 8.84, 8.83, 8.84, 8.78, 8.75, 8.72, 8.68, 8.64, 8.62, 8.64, 8.61, 8.61, 8.63, 8.69, 8.72, 8.79, 8.85, 8.95, 9.08, 9.34, 9.59, 9.66, 9.8, 9.7, 9.49, 9.35, 9.2, 9.13, 9.08, 9.02, 8.97, 8.92, 8.88, 8.85, 8.83, 8.8, 8.77, 8.79, 8.81, 8.83, 8.76, 8.75, 8.78, 8.77, 8.77, 8.76, 8.74, 8.71, 8.7, 8.69, 8.65, 8.61, 8.59, 8.57, 8.58, 8.59, 8.59, 8.55, 8.55, 8.53, 8.51, 8.44, 8.4, 8.37, 8.3, 8.3, 8.31, 8.29, 8.25, 8.08, 7.91]}];
+        const signalsData = [];
         let myChart = null;
 
         function loadChart(ticker) {
